@@ -1,0 +1,6 @@
+playTime:15
+portName:COM1
+baudios:115200
+paridad:par
+bitsDatos:8
+bitStop:1

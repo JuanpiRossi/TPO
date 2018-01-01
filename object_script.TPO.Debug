@@ -1,0 +1,14 @@
+INPUT(
+./debug\main.o
+./debug\mainwindow.o
+./debug\config.o
+./debug\filehandler.o
+./debug\preguntas.o
+./debug\previsualizar.o
+./debug\serialport.o
+./debug\scoreboardhelper.o
+./debug\moc_mainwindow.o
+./debug\moc_config.o
+./debug\moc_previsualizar.o
+./debug\moc_serialport.o
+);

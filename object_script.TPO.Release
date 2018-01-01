@@ -1,0 +1,14 @@
+INPUT(
+./release\main.o
+./release\mainwindow.o
+./release\config.o
+./release\filehandler.o
+./release\preguntas.o
+./release\previsualizar.o
+./release\serialport.o
+./release\scoreboardhelper.o
+./release\moc_mainwindow.o
+./release\moc_config.o
+./release\moc_previsualizar.o
+./release\moc_serialport.o
+);
