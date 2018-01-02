@@ -570,7 +570,8 @@ void MainWindow::empezarJuego(){
         tmp = serial->generateMsg(255,'E','E',gameTimer);
         serial->write(tmp);
         timer->singleShot(gameTimer*1000,this,SLOT(finJuego()));
-    }
+    }   else
+        ui->gameState->setCurrentIndex(0);
 }
 
 void MainWindow::finJuego(){
