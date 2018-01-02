@@ -1,35 +1,35 @@
-# TPO
-
-Manual de uso:
-
--cargar las preguntas y respuestas en los campos, asegurandose de apretar gaurdar al completar todos los campos
--(opcional) previsualizar para ver si todo lo que cargo esta bien
--apretar empezar juego cuando cargo las preguntas
+# TPO<br/>
+<br/>
+Manual de uso:<br/>
+<br/>
+-cargar las preguntas y respuestas en los campos, asegurandose de apretar gaurdar al completar todos los campos<br/>
+-(opcional) previsualizar para ver si todo lo que cargo esta bien<br/>
+-apretar empezar juego cuando cargo las preguntas<br/>
 
 
 Manual de mensajes series:
 
 -composicion del mensaje (separo los caracteres con''):
   '<' 'Cantidad de caracteres de mensaje' 'id' 'accion1' 'accion2' "mensaje" 'xor' '>'
--acciones: P 1-7	  pregunta
-		       A 1-7	  respuesta A
-		       B 1-7	  respuesta B
-		       C 1-7	  respuesta C
-		       D 1-7	  respuesta D
-		       X X	    Cantidad de preguntas
-		       N 1-7	  Cantidad de respuestas
-		       C C	    mensaje para pedir confirmacion
-           r 1-7	  reenvio pregunta
-           a 1-7	  reenvio respuesta A
-           b 1-7	  reenvio respuesta B
-           c 1-7	  reenvio respuesta C
-           d 1-7	  reenvio respuesta D
-           E E	    Empieza el juego
-           F F	    Fin del juego
+-acciones: P 1-7    pregunta
+           A 1-7    respuesta A
+           B 1-7    respuesta B
+           C 1-7    respuesta C
+           D 1-7    respuesta D
+           X X      Cantidad de preguntas
+           N 1-7    Cantidad de respuestas
+           C C      mensaje para pedir confirmacion
+           r 1-7    reenvio pregunta
+           a 1-7    reenvio respuesta A
+           b 1-7    reenvio respuesta B
+           c 1-7    reenvio respuesta C
+           d 1-7    reenvio respuesta D
+           E E      Empieza el juego
+           F F      Fin del juego
 
-           R O     	respuesta de esclavo (todo ok)
-           R M	    respuesta de esclavo (con error)
-           R F	    respuesta de esclavo (fin del juego)
+           R O      respuesta de esclavo (todo ok)
+           R M      respuesta de esclavo (con error)
+           R F      respuesta de esclavo (fin del juego)
            
            
 Orden de mensajes serie:
@@ -74,6 +74,5 @@ Orden de mensajes serie:
            
            
    
-
 
 
