@@ -1,10 +1,11 @@
-# TPO<br/>
-<br/>
-Manual de uso:<br/>
-<br/>
--cargar las preguntas y respuestas en los campos, asegurandose de apretar gaurdar al completar todos los campos<br/>
--(opcional) previsualizar para ver si todo lo que cargo esta bien<br/>
--apretar empezar juego cuando cargo las preguntas<br/>
+<pre>
+# TPO
+
+Manual de uso:
+
+-cargar las preguntas y respuestas en los campos, asegurandose de apretar gaurdar al completar todos los campos
+-(opcional) previsualizar para ver si todo lo que cargo esta bien
+-apretar empezar juego cuando cargo las preguntas
 
 
 Manual de mensajes series:
@@ -71,6 +72,7 @@ Orden de mensajes serie:
     -Los esclavos tienen tiempo de responder hasta que termina el tiempo, donde la aplicacion manda su mensaje de fin, ejemplo: '<'+1+255+'F'+'F'+1+1+'>'
     -En este momento termina el juego y no se envian mas mensajes ni se contempla recibir mas mensajes
            
+<pre/>
            
            
    
