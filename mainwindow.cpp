@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include <qdebug.h>
 preguntas pregArray[7];
 int currentPreg=1,maxPreg=1;
 
@@ -230,6 +230,7 @@ void MainWindow::on_pregButton_1_clicked()
         }
     }
     else{
+        ui->cantRespuestas->setValue(4);
         ui->checkBoxA->setChecked(false);
         ui->checkBoxB->setChecked(false);
         ui->checkBoxC->setChecked(false);
@@ -276,6 +277,7 @@ void MainWindow::on_pregButton_2_clicked()
         }
     }
     else{
+        ui->cantRespuestas->setValue(4);
         ui->checkBoxA->setChecked(false);
         ui->checkBoxB->setChecked(false);
         ui->checkBoxC->setChecked(false);
@@ -322,6 +324,7 @@ void MainWindow::on_pregButton_3_clicked()
         }
     }
     else{
+        ui->cantRespuestas->setValue(4);
         ui->checkBoxA->setChecked(false);
         ui->checkBoxB->setChecked(false);
         ui->checkBoxC->setChecked(false);
@@ -368,6 +371,7 @@ void MainWindow::on_pregButton_4_clicked()
         }
     }
     else{
+        ui->cantRespuestas->setValue(4);
         ui->checkBoxA->setChecked(false);
         ui->checkBoxB->setChecked(false);
         ui->checkBoxC->setChecked(false);
@@ -414,6 +418,7 @@ void MainWindow::on_pregButton_5_clicked()
         }
     }
     else{
+        ui->cantRespuestas->setValue(4);
         ui->checkBoxA->setChecked(false);
         ui->checkBoxB->setChecked(false);
         ui->checkBoxC->setChecked(false);
@@ -460,6 +465,7 @@ void MainWindow::on_pregButton_6_clicked()
         }
     }
     else{
+        ui->cantRespuestas->setValue(4);
         ui->checkBoxA->setChecked(false);
         ui->checkBoxB->setChecked(false);
         ui->checkBoxC->setChecked(false);
@@ -506,6 +512,7 @@ void MainWindow::on_pregButton_7_clicked()
         }
     }
     else{
+        ui->cantRespuestas->setValue(4);
         ui->checkBoxA->setChecked(false);
         ui->checkBoxB->setChecked(false);
         ui->checkBoxC->setChecked(false);
@@ -517,6 +524,41 @@ void MainWindow::on_pregButton_7_clicked()
     ui->checkBoxD->setAutoExclusive(true);
     currentPreg = 7;
     ui->labelPregunta->setText("Pregunta 7:");
+}
+
+void MainWindow::on_cantRespuestas_valueChanged(int value)
+{
+    ui->checkBoxA->setAutoExclusive(false);
+    ui->checkBoxB->setAutoExclusive(false);
+    ui->checkBoxC->setAutoExclusive(false);
+    ui->checkBoxD->setAutoExclusive(false);
+    switch(value){
+    case 2:
+        ui->checkBoxC->setChecked(false);
+        ui->checkBoxD->setChecked(false);
+        ui->checkBoxC->setDisabled(true);
+        ui->checkBoxD->setDisabled(true);
+        ui->respC->setDisabled(true);
+        ui->respD->setDisabled(true);
+        break;
+    case 3:
+        ui->checkBoxD->setChecked(false);
+        ui->checkBoxC->setEnabled(true);
+        ui->checkBoxD->setDisabled(true);
+        ui->respC->setEnabled(true);
+        ui->respD->setDisabled(true);
+        break;
+    case 4:
+        ui->checkBoxC->setEnabled(true);
+        ui->checkBoxD->setEnabled(true);
+        ui->respC->setEnabled(true);
+        ui->respD->setEnabled(true);
+        break;
+    }
+    ui->checkBoxA->setAutoExclusive(true);
+    ui->checkBoxB->setAutoExclusive(true);
+    ui->checkBoxC->setAutoExclusive(true);
+    ui->checkBoxD->setAutoExclusive(true);
 }
 
 void MainWindow::on_removeButton_clicked(){
@@ -741,6 +783,7 @@ void MainWindow::on_pregunta_textChanged()
         ui->pregunta->setTextCursor(cursor);
     }
 }
+
 
 
 

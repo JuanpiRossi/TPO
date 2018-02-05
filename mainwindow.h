@@ -76,6 +76,8 @@ private slots:
 
     void on_pregunta_textChanged();
 
+    void on_cantRespuestas_valueChanged(int value);
+
 signals:
     void emitData();
 private:
