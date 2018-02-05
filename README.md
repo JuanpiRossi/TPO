@@ -27,6 +27,7 @@ Manual de mensajes series:
            d 1-7    reenvio respuesta D
            E E      Empieza el juego
            F F      Fin del juego
+           Q Q      Pido respuestas
 
            R O      respuesta de esclavo (todo ok)
            R M      respuesta de esclavo (con error)
