@@ -88,7 +88,7 @@ public:
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gameState = new QStackedWidget(centralWidget);
         gameState->setObjectName(QStringLiteral("gameState"));
-        gameState->setGeometry(QRect(0, 0, 511, 291));
+        gameState->setGeometry(QRect(0, 0, 511, 321));
         page = new QWidget();
         page->setObjectName(QStringLiteral("page"));
         principalBox = new QGroupBox(page);
@@ -101,15 +101,19 @@ public:
         respA = new QLineEdit(principalBox);
         respA->setObjectName(QStringLiteral("respA"));
         respA->setGeometry(QRect(20, 120, 181, 20));
+        respA->setMaxLength(20);
         respB = new QLineEdit(principalBox);
         respB->setObjectName(QStringLiteral("respB"));
         respB->setGeometry(QRect(20, 180, 181, 20));
+        respB->setMaxLength(20);
         respC = new QLineEdit(principalBox);
         respC->setObjectName(QStringLiteral("respC"));
         respC->setGeometry(QRect(270, 120, 181, 20));
+        respC->setMaxLength(20);
         respD = new QLineEdit(principalBox);
         respD->setObjectName(QStringLiteral("respD"));
         respD->setGeometry(QRect(270, 180, 181, 20));
+        respD->setMaxLength(20);
         checkBoxA = new QCheckBox(principalBox);
         checkBoxA->setObjectName(QStringLiteral("checkBoxA"));
         checkBoxA->setGeometry(QRect(210, 120, 16, 17));
@@ -250,7 +254,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        gameState->setCurrentIndex(2);
+        gameState->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(MainWindow);

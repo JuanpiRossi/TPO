@@ -8,8 +8,8 @@
 #include <QTimer>
 #include <QObject>
 
-#define TIMERENVIODATOS 100
-#define TIMERESPERARESPUESTA 1000
+#define TIMERENVIODATOS 1
+#define TIMERESPERARESPUESTA 10
 
 class serialPort : public QObject
 {
@@ -58,6 +58,7 @@ public:
     int idRetrys[5];
     void write(QByteArray sendQByteArray);
     QByteArray response[5];
+    void createRetryListFull();
 };
 
 #endif // SERIALPORT_H

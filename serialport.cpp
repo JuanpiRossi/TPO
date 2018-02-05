@@ -1,4 +1,5 @@
 #include "serialport.h"
+#include <qdebug.h>
 
 
 serialPort::serialPort()
@@ -40,6 +41,7 @@ serialPort::~serialPort() {
 }
 
 void serialPort::write(QByteArray sendQByteArray){
+    qDebug() << "send: " << sendQByteArray.toHex();
     serial->write(sendQByteArray);
 }
 
@@ -227,7 +229,7 @@ void serialPort::enviarMsg(){
 void serialPort::enviarMsgTimer(){
     static int cont=0;
 
-    serial->write(msgArray[cont]);
+    write(msgArray[cont]);
     cont++;
     if(cont==msgArray.size()){
         cont=0;
@@ -275,8 +277,8 @@ void serialPort::envioConfirmacionTimer(){
     }   else    {
         id++;
         if(idRetrys[id-1]!=-1){
-            tmp = generateMsg(id,'C','C',63);
-            serial->write(tmp);
+            tmp = generateMsg(id,'G',id,63);
+            write(tmp);
         }
     }
 }
@@ -284,6 +286,7 @@ void serialPort::envioConfirmacionTimer(){
 void serialPort::readData(){
     int cont,XoR;
     QByteArray read = serial->readAll();
+    qDebug() << "Recibido: " << read.toHex();
     if(read[0]=='<'&&read[1]==char(1)&&read[3]=='R'&&read[4]=='O'&&read[5]==read[6]&&read[7]=='>'){
         if(read[2]>=char(1)&&read[2]<=char(5)){
             idRetrys[read[2]-1] = -1;
@@ -374,54 +377,79 @@ void serialPort::createMsgReenvio(){
         if(tmp[0]!=char(0)&&tmp[1]!=char(0)&&!retryList.contains(tmp))
             retryList << tmp;
     }
+    qDebug() << retryList.indexOf("XX");
+    if(retryList.indexOf("XX")!=-1){
+        retryList.clear();
+        createRetryListFull();
+    }
     timerReenvio->start(TIMERENVIODATOS);
 }
 
 void serialPort::envioReenvioTimer(){
     int size = retryList.size();
+    int maxPreg,contMax;
     static int cont=0;
     QByteArray tmp;
 
+    qDebug() << "Retry list: " << retryList << "Size> " << size;
     if(!retryList.isEmpty()){
         switch(retryList[cont][0]){
         case 'P':
             if(retryList[cont][1]>=char(1)&&retryList[cont][1]<=char(7)){
                 if(pregArrayBuffer[retryList[cont][1]-1].getCantResp()!=0){
-                    tmp = generateMsg(255,'p',retryList[cont][1],pregArrayBuffer[retryList[cont][1]-1].getPregunta());
-                    serial->write(tmp);
+                    tmp = generateMsg(255,'P',retryList[cont][1],pregArrayBuffer[retryList[cont][1]-1].getPregunta());
+                    write(tmp);
                 }
             }
             break;
         case 'A':
             if(retryList[cont][1]>=char(1)&&retryList[cont][1]<=char(7)){
                 if(pregArrayBuffer[retryList[cont][1]-1].getCantResp()!=0){
-                    tmp = generateMsg(255,'a',retryList[cont][1],pregArrayBuffer[retryList[cont][1]-1].getRespuestaA());
-                    serial->write(tmp);
+                    tmp = generateMsg(255,'A',retryList[cont][1],pregArrayBuffer[retryList[cont][1]-1].getRespuestaA());
+                    write(tmp);
                 }
             }
             break;
         case 'B':
             if(retryList[cont][1]>=char(1)&&retryList[cont][1]<=char(7)){
                 if(pregArrayBuffer[retryList[cont][1]-1].getCantResp()!=0){
-                    tmp = generateMsg(255,'b',retryList[cont][1],pregArrayBuffer[retryList[cont][1]-1].getRespuestaB());
-                    serial->write(tmp);
+                    tmp = generateMsg(255,'B',retryList[cont][1],pregArrayBuffer[retryList[cont][1]-1].getRespuestaB());
+                    write(tmp);
                 }
             }
             break;
         case 'C':
             if(retryList[cont][1]>=char(1)&&retryList[cont][1]<=char(7)){
                 if(pregArrayBuffer[retryList[cont][1]-1].getCantResp()!=0){
-                    tmp = generateMsg(255,'c',retryList[cont][1],pregArrayBuffer[retryList[cont][1]-1].getRespuestaC());
-                    serial->write(tmp);
+                    tmp = generateMsg(255,'C',retryList[cont][1],pregArrayBuffer[retryList[cont][1]-1].getRespuestaC());
+                    write(tmp);
                 }
             }
             break;
         case 'D':
             if(retryList[cont][1]>=char(1)&&retryList[cont][1]<=char(7)){
                 if(pregArrayBuffer[retryList[cont][1]-1].getCantResp()!=0){
-                    tmp = generateMsg(255,'d',retryList[cont][1],pregArrayBuffer[retryList[cont][1]-1].getRespuestaD());
-                    serial->write(tmp);
+                    tmp = generateMsg(255,'D',retryList[cont][1],pregArrayBuffer[retryList[cont][1]-1].getRespuestaD());
+                    write(tmp);
                 }
+            }
+            break;
+        case 'N':
+            if(retryList[cont][1]>=char(1)&&retryList[cont][1]<=char(7)){
+                if(pregArrayBuffer[retryList[cont][1]-1].getCantResp()!=0){
+                    tmp = generateMsg(255,'N',retryList[cont][1],pregArrayBuffer[retryList[cont][1]-1].getCantResp());
+                    write(tmp);
+                }
+            }
+            break;
+        case 'X':
+            if(retryList[cont][1]=='X'){
+                for(contMax=0,maxPreg=0;contMax!=7;contMax++){
+                        if(pregArrayBuffer[contMax].getCantResp()>0)
+                            maxPreg++;
+                }
+                tmp = generateMsg(255,'X','X',maxPreg);
+                write(tmp);
             }
             break;
         }
@@ -434,7 +462,61 @@ void serialPort::envioReenvioTimer(){
     }
 }
 
+void serialPort::createRetryListFull(){
+    int cont = 1;
+    QByteArray tmpArray;
 
+    tmpArray.clear();
+    tmpArray.resize(2);
+    tmpArray[0] = 'X';
+    tmpArray[1] = 'X';
+
+    retryList << tmpArray;
+
+    for(cont=0;cont!=7;cont++){
+        if(pregArrayBuffer[cont].getCantResp()!=0){
+            tmpArray.clear();
+            tmpArray.resize(2);
+            tmpArray[0] = 'P';
+            tmpArray[1] = cont+1;
+            retryList << tmpArray;
+
+            tmpArray.clear();
+            tmpArray.resize(2);
+            tmpArray[0] = 'N';
+            tmpArray[1] = cont+1;
+            retryList << tmpArray;
+
+            tmpArray.clear();
+            tmpArray.resize(2);
+            tmpArray[0] = 'A';
+            tmpArray[1] = cont+1;
+            retryList << tmpArray;
+
+            tmpArray.clear();
+            tmpArray.resize(2);
+            tmpArray[0] = 'B';
+            tmpArray[1] = cont+1;
+            retryList << tmpArray;
+
+            if(pregArrayBuffer[cont].getCantResp()>2){
+                tmpArray.clear();
+                tmpArray.resize(2);
+                tmpArray[0] = 'C';
+                tmpArray[1] = cont+1;
+                retryList << tmpArray;
+            }
+
+            if(pregArrayBuffer[cont].getCantResp()>3){
+                tmpArray.clear();
+                tmpArray.resize(2);
+                tmpArray[0] = 'D';
+                tmpArray[1] = cont+1;
+                retryList << tmpArray;
+            }
+        }
+    }
+}
 
 
 

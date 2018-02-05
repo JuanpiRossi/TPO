@@ -70,6 +70,8 @@ private slots:
 
     void scoreBoardWindow(int p1, int p2, int p3, int p4, int p5);
 
+    void on_pregunta_textChanged();
+
 signals:
     void emitData();
 private:

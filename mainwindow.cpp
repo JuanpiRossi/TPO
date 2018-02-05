@@ -557,7 +557,7 @@ void MainWindow::empezarJuego(){
         if(player==-1)
             amountOfPlayers++;
     }
-    if(amountOfPlayers>1){
+    if(amountOfPlayers>=1){
         fileContent = file.readFile();
         QRegExp rx("playTime:([0-9]*)\n"
                    "portName:([^\n]*)\n"
@@ -701,6 +701,16 @@ void MainWindow::scoreBoardWindow(int p1, int p2, int p3, int p4, int p5){
         }
     }
     ui->puntajeQuintoPuesto->setText("<p>5.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
+}
+
+void MainWindow::on_pregunta_textChanged()
+{
+    if(ui->pregunta->toPlainText().length()>40){
+        QTextCursor cursor(ui->pregunta->textCursor());
+        ui->pregunta->setText(ui->pregunta->toPlainText().mid(0,40));
+        cursor.movePosition(QTextCursor::End, QTextCursor::MoveAnchor);
+        ui->pregunta->setTextCursor(cursor);
+    }
 }
 
 
