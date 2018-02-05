@@ -64,6 +64,10 @@ private slots:
 
     void finJuego();
 
+    void pedirPuntajes();
+
+    void procesarPuntajes();
+
     void on_closeButton_2_clicked();
 
     void on_replayButton_clicked();
@@ -81,6 +85,7 @@ private:
     serialPort *serial;
     fileHandler file;
     int gameTimer;
+    QTimer *timerGetResp;
     QTimer *timer;
 };
 

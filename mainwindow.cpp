@@ -12,10 +12,12 @@ MainWindow::MainWindow(QWidget *parent) :
     configInstance = new config();
     prevInstance = new previsualizar();
     serial = new serialPort();
+    timer = new QTimer(this);
+    timerGetResp = new QTimer(this);
     QObject::connect(configInstance,SIGNAL(exiting()),this,SLOT(reactivateConfig()));
     QObject::connect(prevInstance,SIGNAL(exiting()),this,SLOT(reactivatePrev()));
     QObject::connect(serial,SIGNAL(beginGame()),this,SLOT(empezarJuego()));
-    timer = new QTimer(this);
+    QObject::connect(timerGetResp,SIGNAL(timeout()),this,SLOT(pedirPuntajes()));
     ui->gameState->setCurrentIndex(0);
 
     ui->pregButton_2->setVisible(false);
@@ -575,7 +577,32 @@ void MainWindow::empezarJuego(){
 }
 
 void MainWindow::finJuego(){
+    timerGetResp->start(TIMERESPERARESPUESTA);
+}
+
+void MainWindow::pedirPuntajes(){
+    static int id=0;
     QByteArray tmp;
+
+    while(id!=6){
+        if(id==0)   {
+            tmp = serial->generateMsg(255,'F','F',1);
+            serial->write(tmp);
+        }
+        else    {
+            tmp = serial->generateMsg(id,'Q','Q',1);
+            serial->write(tmp);
+        }
+        id++;
+    }
+    if(id==6){
+        timerGetResp->stop();
+        procesarPuntajes();
+        id=0;
+    }
+}
+
+void MainWindow::procesarPuntajes(){
     int cont,player1,player2,player3,player4,player5;
     ui->gameState->setCurrentIndex(2);
 
@@ -584,9 +611,6 @@ void MainWindow::finJuego(){
     player3 = 0;
     player4 = 0;
     player5 = 0;
-
-    tmp = serial->generateMsg(255,'F','F',1);
-    serial->write(tmp);
     if(!serial->response[0].isEmpty()){
         for(cont=0;cont!=7;cont++){
             if((pregArray[cont].getRespCorrect()+64)==serial->response[0][2+cont*3])
@@ -632,6 +656,11 @@ void MainWindow::on_replayButton_clicked()
     ui->pregButton_6->setVisible(false);
     ui->pregButton_7->setVisible(false);
     ui->errorLabel->setVisible(false);
+    serial->response[0].clear();
+    serial->response[1].clear();
+    serial->response[2].clear();
+    serial->response[3].clear();
+    serial->response[4].clear();
     pregArray[0].borrarPregunta();
     pregArray[1].borrarPregunta();
     pregArray[2].borrarPregunta();
@@ -712,11 +741,6 @@ void MainWindow::on_pregunta_textChanged()
         ui->pregunta->setTextCursor(cursor);
     }
 }
-
-
-
-
-
 
 
 
