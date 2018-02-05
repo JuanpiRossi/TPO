@@ -538,6 +538,8 @@ void MainWindow::on_cantRespuestas_valueChanged(int value)
         ui->checkBoxD->setChecked(false);
         ui->checkBoxC->setDisabled(true);
         ui->checkBoxD->setDisabled(true);
+        ui->respC->setText("");
+        ui->respD->setText("");
         ui->respC->setDisabled(true);
         ui->respD->setDisabled(true);
         break;
@@ -545,6 +547,7 @@ void MainWindow::on_cantRespuestas_valueChanged(int value)
         ui->checkBoxD->setChecked(false);
         ui->checkBoxC->setEnabled(true);
         ui->checkBoxD->setDisabled(true);
+        ui->respD->setText("");
         ui->respC->setEnabled(true);
         ui->respD->setDisabled(true);
         break;
