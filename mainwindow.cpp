@@ -639,14 +639,14 @@ void MainWindow::empezarJuego(){
 }
 
 void MainWindow::finJuego(){
-    timerGetResp->start(TIMERESPERARESPUESTA);
+    timerGetResp->start(TIMERECIBIRPUNTOS);
 }
 
 void MainWindow::pedirPuntajes(){
     static int id=0;
     QByteArray tmp;
 
-    while(id!=6){
+    if(id!=6){
         if(id==0)   {
             tmp = serial->generateMsg(255,'F','F',1);
             serial->write(tmp);
