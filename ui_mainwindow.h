@@ -65,6 +65,9 @@ public:
     QPushButton *closeButton;
     QPushButton *pregButton_5;
     QPushButton *startButton;
+    QWidget *mensajeError;
+    QLabel *msgErrorGuardar;
+    QLabel *msgErrorComunicacion;
     QWidget *page_2;
     QGroupBox *gameInProgressBox;
     QLabel *label;
@@ -88,7 +91,7 @@ public:
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gameState = new QStackedWidget(centralWidget);
         gameState->setObjectName(QStringLiteral("gameState"));
-        gameState->setGeometry(QRect(0, 0, 511, 321));
+        gameState->setGeometry(QRect(0, 0, 511, 291));
         page = new QWidget();
         page->setObjectName(QStringLiteral("page"));
         principalBox = new QGroupBox(page);
@@ -204,6 +207,15 @@ public:
         startButton = new QPushButton(principalBox);
         startButton->setObjectName(QStringLiteral("startButton"));
         startButton->setGeometry(QRect(400, 240, 75, 23));
+        mensajeError = new QWidget(page);
+        mensajeError->setObjectName(QStringLiteral("mensajeError"));
+        mensajeError->setGeometry(QRect(140, -90, 221, 91));
+        msgErrorGuardar = new QLabel(mensajeError);
+        msgErrorGuardar->setObjectName(QStringLiteral("msgErrorGuardar"));
+        msgErrorGuardar->setGeometry(QRect(20, 10, 181, 81));
+        msgErrorComunicacion = new QLabel(mensajeError);
+        msgErrorComunicacion->setObjectName(QStringLiteral("msgErrorComunicacion"));
+        msgErrorComunicacion->setGeometry(QRect(20, 10, 181, 71));
         gameState->addWidget(page);
         page_2 = new QWidget();
         page_2->setObjectName(QStringLiteral("page_2"));
@@ -289,6 +301,8 @@ public:
         closeButton->setText(QApplication::translate("MainWindow", "Cerrar", nullptr));
         pregButton_5->setText(QApplication::translate("MainWindow", "5", nullptr));
         startButton->setText(QApplication::translate("MainWindow", "Empezar", nullptr));
+        msgErrorGuardar->setText(QApplication::translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:11pt; font-weight:600; color:#ff0000;\">Error al guardar</span><br/>Debe escribir la pregunta,<br/>sus respuestas y seleccionar<br/>a correcta.</p></body></html>", nullptr));
+        msgErrorComunicacion->setText(QApplication::translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:11pt; font-weight:600; color:#ff0000;\">Error de comunicacion</span><br/>Debe configurar el puerto<br/>antes de empezar la partida.</p></body></html>", nullptr));
         gameInProgressBox->setTitle(QString());
         label->setText(QApplication::translate("MainWindow", "Juego en progreso", nullptr));
         groupBox->setTitle(QString());

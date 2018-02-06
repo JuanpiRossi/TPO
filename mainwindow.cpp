@@ -3,6 +3,8 @@
 #include <qdebug.h>
 preguntas pregArray[7];
 int currentPreg=1,maxPreg=1;
+#define ERRORCOMUNICACION 2
+#define ERRORGUARDAR 1
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -14,11 +16,14 @@ MainWindow::MainWindow(QWidget *parent) :
     serial = new serialPort();
     timer = new QTimer(this);
     timerGetResp = new QTimer(this);
+    timerError = new QTimer(this);
     QObject::connect(configInstance,SIGNAL(exiting()),this,SLOT(reactivateConfig()));
     QObject::connect(prevInstance,SIGNAL(exiting()),this,SLOT(reactivatePrev()));
     QObject::connect(serial,SIGNAL(beginGame()),this,SLOT(empezarJuego()));
     QObject::connect(timerGetResp,SIGNAL(timeout()),this,SLOT(pedirPuntajes()));
+    QObject::connect(timerError,SIGNAL(timeout()),this,SLOT(moveMsg()));
     ui->gameState->setCurrentIndex(0);
+    ui->mensajeError->setStyleSheet("background-color: lightgray");
 
     ui->pregButton_2->setVisible(false);
     ui->pregButton_3->setVisible(false);
@@ -27,6 +32,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pregButton_6->setVisible(false);
     ui->pregButton_7->setVisible(false);
     ui->errorLabel->setVisible(false);
+    ui->msgErrorGuardar->setVisible(false);
+    ui->msgErrorComunicacion->setVisible(false);
+    ui->mensajeError->setVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -89,6 +97,9 @@ void MainWindow::on_saveButton_clicked()
                                             ui->respD->text().toUtf8(),
                                             ui->cantRespuestas->value(),
                                             respCorrecta);
+    }
+    else{
+        showMessage(ERRORGUARDAR);
     }
 }
 
@@ -583,10 +594,11 @@ void MainWindow::on_startButton_clicked()
         serial->open();
         if(serial->isOpen()){
             ui->gameState->setCurrentIndex(1);
-            ui->errorLabel->setVisible(false);
             serial->enviarMsg();
-        }   else
-            ui->errorLabel->setVisible(true);
+        }
+        else{
+            showMessage(ERRORCOMUNICACION);
+        }
     }
 }
 
@@ -787,7 +799,45 @@ void MainWindow::on_pregunta_textChanged()
     }
 }
 
+void MainWindow::showMessage(int msgSelect){
+    switch(msgSelect){
+    case ERRORGUARDAR:
+        ui->msgErrorGuardar->setVisible(true);
+        break;
+    case ERRORCOMUNICACION:
+        ui->msgErrorComunicacion->setVisible(true);
+        break;
+    }
+    ui->mensajeError->setVisible(true);
+    timerError->start(1);
+}
 
+void MainWindow::moveMsg(){
+    static int cont=0;
+    int y=0,tmp;
+
+    if(cont<500){
+        y = cont*16-9000;
+        y = y/100;
+        ui->mensajeError->move(140,y);
+        cont++;
+    }else if(cont<2500){
+        cont++;
+    }else if(cont<3000){
+        tmp = abs(cont-3000);
+        y = tmp*16-9000;
+        y = y/100;
+        ui->mensajeError->move(140,y);
+        cont++;
+    }else   {
+        cont=0;
+        ui->mensajeError->move(140,-90);
+        ui->msgErrorComunicacion->setVisible(false);
+        ui->msgErrorGuardar->setVisible(false);
+        ui->mensajeError->setVisible(false);
+        timerError->stop();
+    }
+}
 
 
 

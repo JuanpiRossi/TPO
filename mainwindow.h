@@ -78,6 +78,10 @@ private slots:
 
     void on_cantRespuestas_valueChanged(int value);
 
+    void showMessage(int msgSelect);
+
+    void moveMsg();
+
 signals:
     void emitData();
 private:
@@ -89,6 +93,7 @@ private:
     int gameTimer;
     QTimer *timerGetResp;
     QTimer *timer;
+    QTimer *timerError;
 };
 
 #endif // MAINWINDOW_H

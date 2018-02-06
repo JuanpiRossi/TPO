@@ -20,7 +20,7 @@
       <x>0</x>
       <y>0</y>
       <width>511</width>
-      <height>321</height>
+      <height>291</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -473,6 +473,42 @@
        </property>
        <property name="text">
         <string>Empezar</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="mensajeError" native="true">
+      <property name="geometry">
+       <rect>
+        <x>140</x>
+        <y>-90</y>
+        <width>221</width>
+        <height>91</height>
+       </rect>
+      </property>
+      <widget class="QLabel" name="msgErrorGuardar">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>10</y>
+         <width>181</width>
+         <height>81</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt; font-weight:600; color:#ff0000;&quot;&gt;Error al guardar&lt;/span&gt;&lt;br/&gt;Debe escribir la pregunta,&lt;br/&gt;sus respuestas y seleccionar&lt;br/&gt;a correcta.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="msgErrorComunicacion">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>10</y>
+         <width>181</width>
+         <height>71</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:11pt; font-weight:600; color:#ff0000;&quot;&gt;Error de comunicacion&lt;/span&gt;&lt;br/&gt;Debe configurar el puerto&lt;br/&gt;antes de empezar la partida.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </widget>
