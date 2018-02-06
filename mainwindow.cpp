@@ -17,13 +17,16 @@ MainWindow::MainWindow(QWidget *parent) :
     timer = new QTimer(this);
     timerGetResp = new QTimer(this);
     timerError = new QTimer(this);
+    timerGuardada = new QTimer(this);
     QObject::connect(configInstance,SIGNAL(exiting()),this,SLOT(reactivateConfig()));
     QObject::connect(prevInstance,SIGNAL(exiting()),this,SLOT(reactivatePrev()));
     QObject::connect(serial,SIGNAL(beginGame()),this,SLOT(empezarJuego()));
     QObject::connect(timerGetResp,SIGNAL(timeout()),this,SLOT(pedirPuntajes()));
     QObject::connect(timerError,SIGNAL(timeout()),this,SLOT(moveMsg()));
+    QObject::connect(timerGuardada,SIGNAL(timeout()),this,SLOT(moveSave()));
     ui->gameState->setCurrentIndex(0);
     ui->mensajeError->setStyleSheet("background-color: lightgray");
+    ui->mensajeGuardar->setStyleSheet("background-color: rgb(0, 255, 0)");
 
     ui->pregButton_2->setVisible(false);
     ui->pregButton_3->setVisible(false);
@@ -35,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->msgErrorGuardar->setVisible(false);
     ui->msgErrorComunicacion->setVisible(false);
     ui->mensajeError->setVisible(false);
+    ui->mensajeGuardar->setVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -97,6 +101,7 @@ void MainWindow::on_saveButton_clicked()
                                             ui->respD->text().toUtf8(),
                                             ui->cantRespuestas->value(),
                                             respCorrecta);
+        showSave();
     }
     else{
         showMessage(ERRORGUARDAR);
@@ -839,6 +844,35 @@ void MainWindow::moveMsg(){
     }
 }
 
+void MainWindow::showSave(){
+    ui->mensajeGuardar->setVisible(true);
+    timerGuardada->start(1);
+}
+
+void MainWindow::moveSave(){
+    static int cont=0;
+    int y=0,tmp;
+
+    if(cont<500){
+        y = cont*8-4000;
+        y = y/100;
+        ui->mensajeGuardar->move(170,y);
+        cont++;
+    }else if(cont<1500){
+        cont++;
+    }else if(cont<2000){
+        tmp = abs(cont-2000);
+        y = tmp*8-4000;
+        y = y/100;
+        ui->mensajeGuardar->move(170,y);
+        cont++;
+    }else   {
+        cont=0;
+        ui->mensajeGuardar->move(170,-40);
+        ui->mensajeGuardar->setVisible(false);
+        timerGuardada->stop();
+    }
+}
 
 
 

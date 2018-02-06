@@ -68,6 +68,8 @@ public:
     QWidget *mensajeError;
     QLabel *msgErrorGuardar;
     QLabel *msgErrorComunicacion;
+    QWidget *mensajeGuardar;
+    QLabel *label_3;
     QWidget *page_2;
     QGroupBox *gameInProgressBox;
     QLabel *label;
@@ -216,6 +218,12 @@ public:
         msgErrorComunicacion = new QLabel(mensajeError);
         msgErrorComunicacion->setObjectName(QStringLiteral("msgErrorComunicacion"));
         msgErrorComunicacion->setGeometry(QRect(20, 10, 181, 71));
+        mensajeGuardar = new QWidget(page);
+        mensajeGuardar->setObjectName(QStringLiteral("mensajeGuardar"));
+        mensajeGuardar->setGeometry(QRect(170, -40, 161, 41));
+        label_3 = new QLabel(mensajeGuardar);
+        label_3->setObjectName(QStringLiteral("label_3"));
+        label_3->setGeometry(QRect(10, 6, 151, 31));
         gameState->addWidget(page);
         page_2 = new QWidget();
         page_2->setObjectName(QStringLiteral("page_2"));
@@ -303,6 +311,7 @@ public:
         startButton->setText(QApplication::translate("MainWindow", "Empezar", nullptr));
         msgErrorGuardar->setText(QApplication::translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:11pt; font-weight:600; color:#ff0000;\">Error al guardar</span><br/>Debe escribir la pregunta,<br/>sus respuestas y seleccionar<br/>a correcta.</p></body></html>", nullptr));
         msgErrorComunicacion->setText(QApplication::translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:11pt; font-weight:600; color:#ff0000;\">Error de comunicacion</span><br/>Debe configurar el puerto<br/>antes de empezar la partida.</p></body></html>", nullptr));
+        label_3->setText(QApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-size:11pt; font-weight:600;\">Pregunta guardada</span></p></body></html>", nullptr));
         gameInProgressBox->setTitle(QString());
         label->setText(QApplication::translate("MainWindow", "Juego en progreso", nullptr));
         groupBox->setTitle(QString());

@@ -512,6 +512,29 @@
        </property>
       </widget>
      </widget>
+     <widget class="QWidget" name="mensajeGuardar" native="true">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>-40</y>
+        <width>161</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <widget class="QLabel" name="label_3">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>6</y>
+         <width>151</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt; font-weight:600;&quot;&gt;Pregunta guardada&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </widget>
     </widget>
     <widget class="QWidget" name="page_2">
      <widget class="QGroupBox" name="gameInProgressBox">

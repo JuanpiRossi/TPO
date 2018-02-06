@@ -82,6 +82,10 @@ private slots:
 
     void moveMsg();
 
+    void showSave();
+
+    void moveSave();
+
 signals:
     void emitData();
 private:
@@ -94,6 +98,7 @@ private:
     QTimer *timerGetResp;
     QTimer *timer;
     QTimer *timerError;
+    QTimer *timerGuardada;
 };
 
 #endif // MAINWINDOW_H
