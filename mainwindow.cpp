@@ -34,7 +34,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pregButton_5->setVisible(false);
     ui->pregButton_6->setVisible(false);
     ui->pregButton_7->setVisible(false);
-    ui->errorLabel->setVisible(false);
     ui->msgErrorGuardar->setVisible(false);
     ui->msgErrorComunicacion->setVisible(false);
     ui->mensajeError->setVisible(false);
@@ -717,7 +716,6 @@ void MainWindow::on_replayButton_clicked()
     ui->pregButton_5->setVisible(false);
     ui->pregButton_6->setVisible(false);
     ui->pregButton_7->setVisible(false);
-    ui->errorLabel->setVisible(false);
     serial->response[0].clear();
     serial->response[1].clear();
     serial->response[2].clear();

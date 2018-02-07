@@ -50,3 +50,6 @@ FORMS += \
 
 DISTFILES += \
     config.txt
+
+RESOURCES += \
+    buttonicons.qrc

@@ -7,6 +7,7 @@ INPUT(
 ./release\previsualizar.o
 ./release\serialport.o
 ./release\scoreboardhelper.o
+./release\qrc_buttonicons.o
 ./release\moc_mainwindow.o
 ./release\moc_config.o
 ./release\moc_previsualizar.o

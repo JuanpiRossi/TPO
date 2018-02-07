@@ -7,6 +7,7 @@ INPUT(
 ./debug\previsualizar.o
 ./debug\serialport.o
 ./debug\scoreboardhelper.o
+./debug\qrc_buttonicons.o
 ./debug\moc_mainwindow.o
 ./debug\moc_config.o
 ./debug\moc_previsualizar.o
