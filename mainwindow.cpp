@@ -645,22 +645,22 @@ void MainWindow::pedirPuntajes(){
     static int id=0;
     QByteArray tmp;
 
-    if(id!=6){
-        if(id==0)   {
+    if(id!=18){
+        if(id<3)   {
             tmp = serial->generateMsg(255,'F','F',1);
             serial->write(tmp);
         }
         else    {
-            tmp = serial->generateMsg(id,'Q','Q',1);
+            tmp = serial->generateMsg(id/3,'Q','Q',1);
             serial->write(tmp);
         }
         id++;
-    }
-    if(id==6){
+    }else{
         timerGetResp->stop();
         procesarPuntajes();
         id=0;
     }
+
 }
 
 void MainWindow::procesarPuntajes(){

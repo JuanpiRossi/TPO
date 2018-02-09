@@ -19,36 +19,24 @@ void previsualizar::initForm(preguntas *pregArray){
     ui->bText_1->setText(pregArray[0].getRespuestaB());
     ui->cText_1->setText(pregArray[0].getRespuestaC());
     ui->dText_1->setText(pregArray[0].getRespuestaD());
+    ui->aCheck_1->setChecked(false);
+    ui->bCheck_1->setChecked(false);
+    ui->cCheck_1->setChecked(false);
+    ui->dCheck_1->setChecked(false);
     switch(pregArray[0].getRespCorrect()){
     case 1:
         ui->aCheck_1->setChecked(true);
-        ui->bCheck_1->setChecked(false);
-        ui->cCheck_1->setChecked(false);
-        ui->dCheck_1->setChecked(false);
         break;
     case 2:
-        ui->aCheck_1->setChecked(false);
         ui->bCheck_1->setChecked(true);
-        ui->cCheck_1->setChecked(false);
-        ui->dCheck_1->setChecked(false);
         break;
     case 3:
-        ui->aCheck_1->setChecked(false);
-        ui->bCheck_1->setChecked(false);
         ui->cCheck_1->setChecked(true);
-        ui->dCheck_1->setChecked(false);
         break;
     case 4:
-        ui->aCheck_1->setChecked(false);
-        ui->bCheck_1->setChecked(false);
-        ui->cCheck_1->setChecked(false);
         ui->dCheck_1->setChecked(true);
         break;
-    case 0:
-        ui->aCheck_1->setChecked(false);
-        ui->bCheck_1->setChecked(false);
-        ui->cCheck_1->setChecked(false);
-        ui->dCheck_1->setChecked(false);
+    default:
         break;
     }
     ui->preguntaText_2->setText(pregArray[1].getPregunta());
