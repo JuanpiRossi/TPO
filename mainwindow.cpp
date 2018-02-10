@@ -108,69 +108,29 @@ void MainWindow::on_saveButton_clicked()
 }
 
 void MainWindow::habilitarPreguntas(){
+    ui->pregButton_1->setVisible(true);
+    ui->pregButton_2->setVisible(false);
+    ui->pregButton_3->setVisible(false);
+    ui->pregButton_4->setVisible(false);
+    ui->pregButton_5->setVisible(false);
+    ui->pregButton_6->setVisible(false);
+    ui->pregButton_7->setVisible(false);
     switch(maxPreg){
-    case 1:
-        ui->pregButton_1->setVisible(true);
-        ui->pregButton_2->setVisible(false);
-        ui->pregButton_3->setVisible(false);
-        ui->pregButton_4->setVisible(false);
-        ui->pregButton_5->setVisible(false);
-        ui->pregButton_6->setVisible(false);
-        ui->pregButton_7->setVisible(false);
-        break;
-    case 2:
-        ui->pregButton_1->setVisible(true);
-        ui->pregButton_2->setVisible(true);
-        ui->pregButton_3->setVisible(false);
-        ui->pregButton_4->setVisible(false);
-        ui->pregButton_5->setVisible(false);
-        ui->pregButton_6->setVisible(false);
-        ui->pregButton_7->setVisible(false);
-        break;
-    case 3:
-        ui->pregButton_1->setVisible(true);
-        ui->pregButton_2->setVisible(true);
-        ui->pregButton_3->setVisible(true);
-        ui->pregButton_4->setVisible(false);
-        ui->pregButton_5->setVisible(false);
-        ui->pregButton_6->setVisible(false);
-        ui->pregButton_7->setVisible(false);
-        break;
-    case 4:
-        ui->pregButton_1->setVisible(true);
-        ui->pregButton_2->setVisible(true);
-        ui->pregButton_3->setVisible(true);
-        ui->pregButton_4->setVisible(true);
-        ui->pregButton_5->setVisible(false);
-        ui->pregButton_6->setVisible(false);
-        ui->pregButton_7->setVisible(false);
-        break;
-    case 5:
-        ui->pregButton_1->setVisible(true);
-        ui->pregButton_2->setVisible(true);
-        ui->pregButton_3->setVisible(true);
-        ui->pregButton_4->setVisible(true);
-        ui->pregButton_5->setVisible(true);
-        ui->pregButton_6->setVisible(false);
-        ui->pregButton_7->setVisible(false);
-        break;
-    case 6:
-        ui->pregButton_1->setVisible(true);
-        ui->pregButton_2->setVisible(true);
-        ui->pregButton_3->setVisible(true);
-        ui->pregButton_4->setVisible(true);
-        ui->pregButton_5->setVisible(true);
-        ui->pregButton_6->setVisible(true);
-        ui->pregButton_7->setVisible(false);
-        break;
     case 7:
-        ui->pregButton_1->setVisible(true);
-        ui->pregButton_2->setVisible(true);
-        ui->pregButton_3->setVisible(true);
-        ui->pregButton_4->setVisible(true);
-        ui->pregButton_5->setVisible(true);
-        ui->pregButton_6->setVisible(true);
         ui->pregButton_7->setVisible(true);
+    case 6:
+        ui->pregButton_6->setVisible(true);
+    case 5:
+        ui->pregButton_5->setVisible(true);
+    case 4:
+        ui->pregButton_4->setVisible(true);
+    case 3:
+        ui->pregButton_3->setVisible(true);
+    case 2:
+        ui->pregButton_2->setVisible(true);
+    case 1:
+        break;
+    default:
         break;
     }
 }
