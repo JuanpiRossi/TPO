@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <qdebug.h>
+#include <sstream>
+#include <iostream>
+#include <string>
 preguntas pregArray[7];
 int currentPreg=1,maxPreg=1;
 #define ERRORCOMUNICACION 2
@@ -141,21 +144,15 @@ bool MainWindow::validacionGuardar()
         return false;
     switch(ui->cantRespuestas->value()) {
     case 4:
-        if(ui->respA->text()==""||ui->respB->text()==""||ui->respC->text()==""||ui->respD->text()=="")
+        if(ui->respD->text()=="")
             return false;
-        if(!ui->checkBoxA->isChecked()&&!ui->checkBoxB->isChecked()&&!ui->checkBoxC->isChecked()&&!ui->checkBoxD->isChecked())
-            return false;
-        break;
     case 3:
-        if(ui->respA->text()==""||ui->respB->text()==""||ui->respC->text()=="")
+        if(ui->respC->text()=="")
             return false;
-        if(!ui->checkBoxA->isChecked()&&!ui->checkBoxB->isChecked()&&!ui->checkBoxC->isChecked())
-            return false;
-        break;
     case 2:
         if(ui->respA->text()==""||ui->respB->text()=="")
             return false;
-        if(!ui->checkBoxA->isChecked()&&!ui->checkBoxB->isChecked())
+        if(!ui->checkBoxA->isChecked()&&!ui->checkBoxB->isChecked()&&!ui->checkBoxC->isChecked()&&!ui->checkBoxD->isChecked())
             return false;
         break;
     default:
@@ -167,371 +164,63 @@ bool MainWindow::validacionGuardar()
 
 void MainWindow::on_newPregButton_clicked()
 {
-    if(maxPreg!=7)
+    if(maxPreg<7)
         maxPreg++;
     habilitarPreguntas();
 }
 
 void MainWindow::on_pregButton_1_clicked()
 {
-    ui->pregunta->setText(pregArray[0].getPregunta());
-    ui->respA->setText(pregArray[0].getRespuestaA());
-    ui->respB->setText(pregArray[0].getRespuestaB());
-    ui->respC->setText(pregArray[0].getRespuestaC());
-    ui->respD->setText(pregArray[0].getRespuestaD());
-    ui->checkBoxA->setAutoExclusive(false);
-    ui->checkBoxB->setAutoExclusive(false);
-    ui->checkBoxC->setAutoExclusive(false);
-    ui->checkBoxD->setAutoExclusive(false);
-    if(pregArray[0].getCantResp()!=0){
-        ui->cantRespuestas->setValue(pregArray[0].getCantResp());
-        ui->checkBoxA->setChecked(false);
-        ui->checkBoxB->setChecked(false);
-        ui->checkBoxC->setChecked(false);
-        ui->checkBoxD->setChecked(false);
-        switch(pregArray[0].getRespCorrect()){
-        case 1:
-            ui->checkBoxA->setChecked(true);
-            break;
-        case 2:
-            ui->checkBoxB->setChecked(true);
-            break;
-        case 3:
-            ui->checkBoxC->setChecked(true);
-            break;
-        case 4:
-            ui->checkBoxD->setChecked(true);
-            break;
-        }
-    }
-    else{
-        ui->cantRespuestas->setValue(4);
-        ui->checkBoxA->setChecked(false);
-        ui->checkBoxB->setChecked(false);
-        ui->checkBoxC->setChecked(false);
-        ui->checkBoxD->setChecked(false);
-    }
-    ui->checkBoxA->setAutoExclusive(true);
-    ui->checkBoxB->setAutoExclusive(true);
-    ui->checkBoxC->setAutoExclusive(true);
-    ui->checkBoxD->setAutoExclusive(true);
-    currentPreg = 1;
-    ui->labelPregunta->setText("Pregunta 1:");
+    changePreg(1);
 }
 
 void MainWindow::on_pregButton_2_clicked()
 {
-    ui->pregunta->setText(pregArray[1].getPregunta());
-    ui->respA->setText(pregArray[1].getRespuestaA());
-    ui->respB->setText(pregArray[1].getRespuestaB());
-    ui->respC->setText(pregArray[1].getRespuestaC());
-    ui->respD->setText(pregArray[1].getRespuestaD());
-    ui->checkBoxA->setAutoExclusive(false);
-    ui->checkBoxB->setAutoExclusive(false);
-    ui->checkBoxC->setAutoExclusive(false);
-    ui->checkBoxD->setAutoExclusive(false);
-    if(pregArray[1].getCantResp()!=0){
-        ui->cantRespuestas->setValue(pregArray[1].getCantResp());
-        ui->checkBoxA->setChecked(false);
-        ui->checkBoxB->setChecked(false);
-        ui->checkBoxC->setChecked(false);
-        ui->checkBoxD->setChecked(false);
-        switch(pregArray[1].getRespCorrect()){
-        case 1:
-            ui->checkBoxA->setChecked(true);
-            break;
-        case 2:
-            ui->checkBoxB->setChecked(true);
-            break;
-        case 3:
-            ui->checkBoxC->setChecked(true);
-            break;
-        case 4:
-            ui->checkBoxD->setChecked(true);
-            break;
-        }
-    }
-    else{
-        ui->cantRespuestas->setValue(4);
-        ui->checkBoxA->setChecked(false);
-        ui->checkBoxB->setChecked(false);
-        ui->checkBoxC->setChecked(false);
-        ui->checkBoxD->setChecked(false);
-    }
-    ui->checkBoxA->setAutoExclusive(true);
-    ui->checkBoxB->setAutoExclusive(true);
-    ui->checkBoxC->setAutoExclusive(true);
-    ui->checkBoxD->setAutoExclusive(true);
-    currentPreg = 2;
-    ui->labelPregunta->setText("Pregunta 2:");
+    changePreg(2);
 }
 
 void MainWindow::on_pregButton_3_clicked()
 {
-    ui->pregunta->setText(pregArray[2].getPregunta());
-    ui->respA->setText(pregArray[2].getRespuestaA());
-    ui->respB->setText(pregArray[2].getRespuestaB());
-    ui->respC->setText(pregArray[2].getRespuestaC());
-    ui->respD->setText(pregArray[2].getRespuestaD());
-    ui->checkBoxA->setAutoExclusive(false);
-    ui->checkBoxB->setAutoExclusive(false);
-    ui->checkBoxC->setAutoExclusive(false);
-    ui->checkBoxD->setAutoExclusive(false);
-    if(pregArray[2].getCantResp()!=0){
-        ui->cantRespuestas->setValue(pregArray[2].getCantResp());
-        ui->checkBoxA->setChecked(false);
-        ui->checkBoxB->setChecked(false);
-        ui->checkBoxC->setChecked(false);
-        ui->checkBoxD->setChecked(false);
-        switch(pregArray[2].getRespCorrect()){
-        case 1:
-            ui->checkBoxA->setChecked(true);
-            break;
-        case 2:
-            ui->checkBoxB->setChecked(true);
-            break;
-        case 3:
-            ui->checkBoxC->setChecked(true);
-            break;
-        case 4:
-            ui->checkBoxD->setChecked(true);
-            break;
-        }
-    }
-    else{
-        ui->cantRespuestas->setValue(4);
-        ui->checkBoxA->setChecked(false);
-        ui->checkBoxB->setChecked(false);
-        ui->checkBoxC->setChecked(false);
-        ui->checkBoxD->setChecked(false);
-    }
-    ui->checkBoxA->setAutoExclusive(true);
-    ui->checkBoxB->setAutoExclusive(true);
-    ui->checkBoxC->setAutoExclusive(true);
-    ui->checkBoxD->setAutoExclusive(true);
-    currentPreg = 3;
-    ui->labelPregunta->setText("Pregunta 3:");
+    changePreg(3);
 }
 
 void MainWindow::on_pregButton_4_clicked()
 {
-    ui->pregunta->setText(pregArray[3].getPregunta());
-    ui->respA->setText(pregArray[3].getRespuestaA());
-    ui->respB->setText(pregArray[3].getRespuestaB());
-    ui->respC->setText(pregArray[3].getRespuestaC());
-    ui->respD->setText(pregArray[3].getRespuestaD());
-    ui->checkBoxA->setAutoExclusive(false);
-    ui->checkBoxB->setAutoExclusive(false);
-    ui->checkBoxC->setAutoExclusive(false);
-    ui->checkBoxD->setAutoExclusive(false);
-    if(pregArray[3].getCantResp()!=0){
-        ui->cantRespuestas->setValue(pregArray[3].getCantResp());
-        ui->checkBoxA->setChecked(false);
-        ui->checkBoxB->setChecked(false);
-        ui->checkBoxC->setChecked(false);
-        ui->checkBoxD->setChecked(false);
-        switch(pregArray[3].getRespCorrect()){
-        case 1:
-            ui->checkBoxA->setChecked(true);
-            break;
-        case 2:
-            ui->checkBoxB->setChecked(true);
-            break;
-        case 3:
-            ui->checkBoxC->setChecked(true);
-            break;
-        case 4:
-            ui->checkBoxD->setChecked(true);
-            break;
-        }
-    }
-    else{
-        ui->cantRespuestas->setValue(4);
-        ui->checkBoxA->setChecked(false);
-        ui->checkBoxB->setChecked(false);
-        ui->checkBoxC->setChecked(false);
-        ui->checkBoxD->setChecked(false);
-    }
-    ui->checkBoxA->setAutoExclusive(true);
-    ui->checkBoxB->setAutoExclusive(true);
-    ui->checkBoxC->setAutoExclusive(true);
-    ui->checkBoxD->setAutoExclusive(true);
-    currentPreg = 4;
-    ui->labelPregunta->setText("Pregunta 4:");
+    changePreg(4);
 }
 
 void MainWindow::on_pregButton_5_clicked()
 {
-    ui->pregunta->setText(pregArray[4].getPregunta());
-    ui->respA->setText(pregArray[4].getRespuestaA());
-    ui->respB->setText(pregArray[4].getRespuestaB());
-    ui->respC->setText(pregArray[4].getRespuestaC());
-    ui->respD->setText(pregArray[4].getRespuestaD());
-    ui->checkBoxA->setAutoExclusive(false);
-    ui->checkBoxB->setAutoExclusive(false);
-    ui->checkBoxC->setAutoExclusive(false);
-    ui->checkBoxD->setAutoExclusive(false);
-    if(pregArray[4].getCantResp()!=0){
-        ui->cantRespuestas->setValue(pregArray[4].getCantResp());
-        ui->checkBoxA->setChecked(false);
-        ui->checkBoxB->setChecked(false);
-        ui->checkBoxC->setChecked(false);
-        ui->checkBoxD->setChecked(false);
-        switch(pregArray[4].getRespCorrect()){
-        case 1:
-            ui->checkBoxA->setChecked(true);
-            break;
-        case 2:
-            ui->checkBoxB->setChecked(true);
-            break;
-        case 3:
-            ui->checkBoxC->setChecked(true);
-            break;
-        case 4:
-            ui->checkBoxD->setChecked(true);
-            break;
-        }
-    }
-    else{
-        ui->cantRespuestas->setValue(4);
-        ui->checkBoxA->setChecked(false);
-        ui->checkBoxB->setChecked(false);
-        ui->checkBoxC->setChecked(false);
-        ui->checkBoxD->setChecked(false);
-    }
-    ui->checkBoxA->setAutoExclusive(true);
-    ui->checkBoxB->setAutoExclusive(true);
-    ui->checkBoxC->setAutoExclusive(true);
-    ui->checkBoxD->setAutoExclusive(true);
-    currentPreg = 5;
-    ui->labelPregunta->setText("Pregunta 5:");
+    changePreg(5);
 }
 
 void MainWindow::on_pregButton_6_clicked()
 {
-    ui->pregunta->setText(pregArray[5].getPregunta());
-    ui->respA->setText(pregArray[5].getRespuestaA());
-    ui->respB->setText(pregArray[5].getRespuestaB());
-    ui->respC->setText(pregArray[5].getRespuestaC());
-    ui->respD->setText(pregArray[5].getRespuestaD());
-    ui->checkBoxA->setAutoExclusive(false);
-    ui->checkBoxB->setAutoExclusive(false);
-    ui->checkBoxC->setAutoExclusive(false);
-    ui->checkBoxD->setAutoExclusive(false);
-    if(pregArray[5].getCantResp()!=0){
-        ui->cantRespuestas->setValue(pregArray[5].getCantResp());
-        ui->checkBoxA->setChecked(false);
-        ui->checkBoxB->setChecked(false);
-        ui->checkBoxC->setChecked(false);
-        ui->checkBoxD->setChecked(false);
-        switch(pregArray[5].getRespCorrect()){
-        case 1:
-            ui->checkBoxA->setChecked(true);
-            break;
-        case 2:
-            ui->checkBoxB->setChecked(true);
-            break;
-        case 3:
-            ui->checkBoxC->setChecked(true);
-            break;
-        case 4:
-            ui->checkBoxD->setChecked(true);
-            break;
-        }
-    }
-    else{
-        ui->cantRespuestas->setValue(4);
-        ui->checkBoxA->setChecked(false);
-        ui->checkBoxB->setChecked(false);
-        ui->checkBoxC->setChecked(false);
-        ui->checkBoxD->setChecked(false);
-    }
-    ui->checkBoxA->setAutoExclusive(true);
-    ui->checkBoxB->setAutoExclusive(true);
-    ui->checkBoxC->setAutoExclusive(true);
-    ui->checkBoxD->setAutoExclusive(true);
-    currentPreg = 6;
-    ui->labelPregunta->setText("Pregunta 6:");
+    changePreg(6);
 }
 
 void MainWindow::on_pregButton_7_clicked()
 {
-    ui->pregunta->setText(pregArray[6].getPregunta());
-    ui->respA->setText(pregArray[6].getRespuestaA());
-    ui->respB->setText(pregArray[6].getRespuestaB());
-    ui->respC->setText(pregArray[6].getRespuestaC());
-    ui->respD->setText(pregArray[6].getRespuestaD());
-    ui->checkBoxA->setAutoExclusive(false);
-    ui->checkBoxB->setAutoExclusive(false);
-    ui->checkBoxC->setAutoExclusive(false);
-    ui->checkBoxD->setAutoExclusive(false);
-    if(pregArray[6].getCantResp()!=0){
-        ui->cantRespuestas->setValue(pregArray[6].getCantResp());
-        ui->checkBoxA->setChecked(false);
-        ui->checkBoxB->setChecked(false);
-        ui->checkBoxC->setChecked(false);
-        ui->checkBoxD->setChecked(false);
-        switch(pregArray[6].getRespCorrect()){
-        case 1:
-            ui->checkBoxA->setChecked(true);
-            break;
-        case 2:
-            ui->checkBoxB->setChecked(true);
-            break;
-        case 3:
-            ui->checkBoxC->setChecked(true);
-            break;
-        case 4:
-            ui->checkBoxD->setChecked(true);
-            break;
-        }
-    }
-    else{
-        ui->cantRespuestas->setValue(4);
-        ui->checkBoxA->setChecked(false);
-        ui->checkBoxB->setChecked(false);
-        ui->checkBoxC->setChecked(false);
-        ui->checkBoxD->setChecked(false);
-    }
-    ui->checkBoxA->setAutoExclusive(true);
-    ui->checkBoxB->setAutoExclusive(true);
-    ui->checkBoxC->setAutoExclusive(true);
-    ui->checkBoxD->setAutoExclusive(true);
-    currentPreg = 7;
-    ui->labelPregunta->setText("Pregunta 7:");
+    changePreg(7);
 }
 
 void MainWindow::on_cantRespuestas_valueChanged(int value)
 {
-    ui->checkBoxA->setAutoExclusive(false);
-    ui->checkBoxB->setAutoExclusive(false);
-    ui->checkBoxC->setAutoExclusive(false);
-    ui->checkBoxD->setAutoExclusive(false);
-    switch(value){
-    case 2:
+    ui->checkBoxC->setEnabled(true);
+    ui->respC->setEnabled(true);
+    ui->checkBoxD->setEnabled(true);
+    ui->respD->setEnabled(true);
+    if(value<4){
         ui->checkBoxC->setChecked(false);
-        ui->checkBoxD->setChecked(false);
         ui->checkBoxC->setDisabled(true);
-        ui->checkBoxD->setDisabled(true);
-        ui->respC->setText("");
-        ui->respD->setText("");
         ui->respC->setDisabled(true);
-        ui->respD->setDisabled(true);
-        break;
-    case 3:
-        ui->checkBoxD->setChecked(false);
-        ui->checkBoxC->setEnabled(true);
-        ui->checkBoxD->setDisabled(true);
-        ui->respD->setText("");
-        ui->respC->setEnabled(true);
-        ui->respD->setDisabled(true);
-        break;
-    case 4:
-        ui->checkBoxC->setEnabled(true);
-        ui->checkBoxD->setEnabled(true);
-        ui->respC->setEnabled(true);
-        ui->respD->setEnabled(true);
-        break;
+        ui->respC->setText("");
+        if(value<3){
+            ui->checkBoxD->setChecked(false);
+            ui->checkBoxD->setDisabled(true);
+            ui->respD->setText("");
+            ui->respD->setDisabled(true);
+        }
     }
     ui->checkBoxA->setAutoExclusive(true);
     ui->checkBoxB->setAutoExclusive(true);
@@ -540,15 +229,11 @@ void MainWindow::on_cantRespuestas_valueChanged(int value)
 }
 
 void MainWindow::on_removeButton_clicked(){
-    int cont = 0;
-
-    for(cont = currentPreg;cont!=7;cont++){
-        pregArray[cont-1].copy(pregArray[cont]);
-    }
-    pregArray[6].guardarPregunta("","","","","",0,0);
-    maxPreg--;
+    if(maxPreg>1)
+        maxPreg--;
+    if(currentPreg>maxPreg)
+        changePreg(currentPreg-1);
     habilitarPreguntas();
-    on_pregButton_1_clicked();
 }
 
 void MainWindow::on_startButton_clicked()
@@ -834,6 +519,49 @@ void MainWindow::moveSave(){
 
 
 
+void MainWindow::changePreg(int p)
+{
+    QString qstr1=QString::fromStdString("Pregunta ")+QString::number(p)+QString::fromStdString(":");
+    ui->pregunta->setText(pregArray[p-1].getPregunta());
+    ui->respA->setText(pregArray[p-1].getRespuestaA());
+    ui->respB->setText(pregArray[p-1].getRespuestaB());
+    ui->respC->setText(pregArray[p-1].getRespuestaC());
+    ui->respD->setText(pregArray[p-1].getRespuestaD());
+    ui->checkBoxA->setAutoExclusive(false);
+    ui->checkBoxB->setAutoExclusive(false);
+    ui->checkBoxC->setAutoExclusive(false);
+    ui->checkBoxD->setAutoExclusive(false);
+    if(pregArray[p-1].getCantResp()!=0){
+        ui->cantRespuestas->setValue(pregArray[p-1].getCantResp());
+        ui->checkBoxA->setChecked(false);
+        ui->checkBoxB->setChecked(false);
+        ui->checkBoxC->setChecked(false);
+        ui->checkBoxD->setChecked(false);
+        switch(pregArray[p-1].getRespCorrect()){
+        case 1:
+            ui->checkBoxA->setChecked(true);
+            break;
+        case 2:
+            ui->checkBoxB->setChecked(true);
+            break;
+        case 3:
+            ui->checkBoxC->setChecked(true);
+            break;
+        case 4:
+            ui->checkBoxD->setChecked(true);
+            break;
+        }
+    }
+    else{
+        ui->cantRespuestas->setValue(4);
+    }
+    ui->checkBoxA->setAutoExclusive(true);
+    ui->checkBoxB->setAutoExclusive(true);
+    ui->checkBoxC->setAutoExclusive(true);
+    ui->checkBoxD->setAutoExclusive(true);
+    currentPreg = p;
+    ui->labelPregunta->setText(qstr1);
+}
 
 
 

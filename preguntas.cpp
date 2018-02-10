@@ -16,12 +16,6 @@ void preguntas::borrarPregunta(){
     respuestaA = "";
     respuestaB = "";
     respuestaC = "";
-    QByteArray getPregunta();
-    QByteArray getRespuestaA();
-    QByteArray getRespuestaB();
-    QByteArray getRespuestaC();
-    QByteArray getRespuestaD();
-    int getCantResp();
     respuestaD = "";
     cantResp = 0;
 }

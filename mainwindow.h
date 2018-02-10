@@ -86,6 +86,7 @@ private slots:
 
     void moveSave();
 
+    void changePreg(int p);
 signals:
     void emitData();
 private:
