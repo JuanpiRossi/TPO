@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QGroupBox" name="principalBox">
@@ -694,8 +694,8 @@
       <widget class="QLabel" name="puntajePrimerPuesto">
        <property name="geometry">
         <rect>
-         <x>30</x>
-         <y>60</y>
+         <x>110</x>
+         <y>20</y>
          <width>351</width>
          <height>21</height>
         </rect>
@@ -707,8 +707,8 @@
       <widget class="QLabel" name="puntajeSegundoPuesto">
        <property name="geometry">
         <rect>
-         <x>30</x>
-         <y>90</y>
+         <x>110</x>
+         <y>50</y>
          <width>351</width>
          <height>21</height>
         </rect>
@@ -720,8 +720,8 @@
       <widget class="QLabel" name="puntajeTercerPuesto">
        <property name="geometry">
         <rect>
-         <x>30</x>
-         <y>120</y>
+         <x>110</x>
+         <y>80</y>
          <width>351</width>
          <height>21</height>
         </rect>
@@ -733,8 +733,8 @@
       <widget class="QLabel" name="puntajeCuartoPuesto">
        <property name="geometry">
         <rect>
-         <x>30</x>
-         <y>150</y>
+         <x>110</x>
+         <y>110</y>
          <width>351</width>
          <height>21</height>
         </rect>
@@ -746,14 +746,53 @@
       <widget class="QLabel" name="puntajeQuintoPuesto">
        <property name="geometry">
         <rect>
-         <x>30</x>
-         <y>180</y>
+         <x>110</x>
+         <y>140</y>
          <width>351</width>
          <height>21</height>
         </rect>
        </property>
        <property name="text">
         <string>&lt;p&gt;5.- Jugador # : &lt;strong&gt;# Puntos&lt;/strong&gt;&lt;/p&gt;</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="puntajeSextoPuesto">
+       <property name="geometry">
+        <rect>
+         <x>110</x>
+         <y>170</y>
+         <width>351</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;6.- Jugador # : &lt;span style=&quot; font-weight:600;&quot;&gt;# Puntos&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="puntajeSeptimoPuesto">
+       <property name="geometry">
+        <rect>
+         <x>110</x>
+         <y>200</y>
+         <width>351</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;7.- Jugador # : &lt;span style=&quot; font-weight:600;&quot;&gt;# Puntos&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="puntajeOctavoPuesto">
+       <property name="geometry">
+        <rect>
+         <x>110</x>
+         <y>230</y>
+         <width>351</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;8.- Jugador # : &lt;span style=&quot; font-weight:600;&quot;&gt;# Puntos&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </widget>

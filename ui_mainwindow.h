@@ -82,6 +82,9 @@ public:
     QLabel *puntajeTercerPuesto;
     QLabel *puntajeCuartoPuesto;
     QLabel *puntajeQuintoPuesto;
+    QLabel *puntajeSextoPuesto;
+    QLabel *puntajeSeptimoPuesto;
+    QLabel *puntajeOctavoPuesto;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -276,19 +279,29 @@ public:
         label_2->setFont(font1);
         puntajePrimerPuesto = new QLabel(groupBox);
         puntajePrimerPuesto->setObjectName(QStringLiteral("puntajePrimerPuesto"));
-        puntajePrimerPuesto->setGeometry(QRect(30, 60, 351, 21));
+        puntajePrimerPuesto->setGeometry(QRect(110, 20, 351, 21));
         puntajeSegundoPuesto = new QLabel(groupBox);
         puntajeSegundoPuesto->setObjectName(QStringLiteral("puntajeSegundoPuesto"));
-        puntajeSegundoPuesto->setGeometry(QRect(30, 90, 351, 21));
+        puntajeSegundoPuesto->setGeometry(QRect(110, 50, 351, 21));
         puntajeTercerPuesto = new QLabel(groupBox);
         puntajeTercerPuesto->setObjectName(QStringLiteral("puntajeTercerPuesto"));
-        puntajeTercerPuesto->setGeometry(QRect(30, 120, 351, 21));
+        puntajeTercerPuesto->setGeometry(QRect(110, 80, 351, 21));
         puntajeCuartoPuesto = new QLabel(groupBox);
         puntajeCuartoPuesto->setObjectName(QStringLiteral("puntajeCuartoPuesto"));
-        puntajeCuartoPuesto->setGeometry(QRect(30, 150, 351, 21));
+        puntajeCuartoPuesto->setGeometry(QRect(110, 110, 351, 21));
         puntajeQuintoPuesto = new QLabel(groupBox);
         puntajeQuintoPuesto->setObjectName(QStringLiteral("puntajeQuintoPuesto"));
-        puntajeQuintoPuesto->setGeometry(QRect(30, 180, 351, 21));
+        puntajeQuintoPuesto->setGeometry(QRect(110, 140, 351, 21));
+        puntajeSextoPuesto = new QLabel(groupBox);
+        puntajeSextoPuesto->setObjectName(QStringLiteral("puntajeSextoPuesto"));
+        puntajeSextoPuesto->setGeometry(QRect(110, 170, 351, 21));
+        puntajeSeptimoPuesto = new QLabel(groupBox);
+        puntajeSeptimoPuesto->setObjectName(QStringLiteral("puntajeSeptimoPuesto"));
+        puntajeSeptimoPuesto->setGeometry(QRect(110, 200, 351, 21));
+        puntajeOctavoPuesto = new QLabel(groupBox);
+        puntajeOctavoPuesto->setObjectName(QStringLiteral("puntajeOctavoPuesto"));
+        puntajeOctavoPuesto->setGeometry(QRect(110, 230, 351, 21));
+
         gameState->addWidget(page_3);
         MainWindow->setCentralWidget(centralWidget);
 

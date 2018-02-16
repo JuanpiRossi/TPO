@@ -97,12 +97,12 @@ void MainWindow::on_saveButton_clicked()
         else if(ui->checkBoxD->isChecked())
             respCorrecta=4;
         pregArray[currentPreg-1].guardarPregunta(ui->pregunta->toPlainText().toUtf8(),
-                                            ui->respA->text().toUtf8(),
-                                            ui->respB->text().toUtf8(),
-                                            ui->respC->text().toUtf8(),
-                                            ui->respD->text().toUtf8(),
-                                            ui->cantRespuestas->value(),
-                                            respCorrecta);
+                                                 ui->respA->text().toUtf8(),
+                                                 ui->respB->text().toUtf8(),
+                                                 ui->respC->text().toUtf8(),
+                                                 ui->respD->text().toUtf8(),
+                                                 ui->cantRespuestas->value(),
+                                                 respCorrecta);
         showSave();
     }
     else{
@@ -131,8 +131,6 @@ void MainWindow::habilitarPreguntas(){
         ui->pregButton_3->setVisible(true);
     case 2:
         ui->pregButton_2->setVisible(true);
-    case 1:
-        break;
     default:
         break;
     }
@@ -211,15 +209,15 @@ void MainWindow::on_cantRespuestas_valueChanged(int value)
     ui->checkBoxD->setEnabled(true);
     ui->respD->setEnabled(true);
     if(value<4){
-        ui->checkBoxC->setChecked(false);
-        ui->checkBoxC->setDisabled(true);
-        ui->respC->setDisabled(true);
-        ui->respC->setText("");
+        ui->checkBoxD->setChecked(false);
+        ui->checkBoxD->setDisabled(true);
+        ui->respD->setText("");
+        ui->respD->setDisabled(true);
         if(value<3){
-            ui->checkBoxD->setChecked(false);
-            ui->checkBoxD->setDisabled(true);
-            ui->respD->setText("");
-            ui->respD->setDisabled(true);
+            ui->checkBoxC->setChecked(false);
+            ui->checkBoxC->setDisabled(true);
+            ui->respC->setDisabled(true);
+            ui->respC->setText("");
         }
     }
     ui->checkBoxA->setAutoExclusive(true);
@@ -229,10 +227,14 @@ void MainWindow::on_cantRespuestas_valueChanged(int value)
 }
 
 void MainWindow::on_removeButton_clicked(){
+    int i;
     if(maxPreg>1)
         maxPreg--;
     if(currentPreg>maxPreg)
         changePreg(currentPreg-1);
+    for(i=6;i>(maxPreg-1);i--){
+        pregArray[i].borrarPregunta();
+    }
     habilitarPreguntas();
 }
 
@@ -252,14 +254,11 @@ void MainWindow::on_startButton_clicked()
 }
 
 void MainWindow::empezarJuego(){
-    int amountOfPlayers=0;
+    int amountOfPlayers=0,count;
     QByteArray tmp;
     QString fileContent;
-    serial->response[0].clear();
-    serial->response[1].clear();
-    serial->response[2].clear();
-    serial->response[3].clear();
-    serial->response[4].clear();
+    for(count=0;count<_players_total_;count++)
+        serial->response[count].clear();
 
     for(const int &player : serial->idRetrys){
         if(player==-1)
@@ -276,7 +275,9 @@ void MainWindow::empezarJuego(){
         rx.indexIn(fileContent);
         gameTimer = rx.capturedTexts()[1].toInt();
         tmp = serial->generateMsg(255,'E','E',gameTimer);
+        for(count=0;count<_repeat_message_;count++){
         serial->write(tmp);
+        }
         timer->singleShot(gameTimer*1000,this,SLOT(finJuego()));
     }   else
         ui->gameState->setCurrentIndex(0);
@@ -290,7 +291,7 @@ void MainWindow::pedirPuntajes(){
     static int id=0;
     QByteArray tmp;
 
-    if(id!=18){
+    if(id<(_players_total_*3)){
         if(id<3)   {
             tmp = serial->generateMsg(255,'F','F',1);
             serial->write(tmp);
@@ -309,50 +310,26 @@ void MainWindow::pedirPuntajes(){
 }
 
 void MainWindow::procesarPuntajes(){
-    int cont,player1,player2,player3,player4,player5;
+    int cont,cont2;
+    int player[7];
     ui->gameState->setCurrentIndex(2);
-
-    player1 = 0;
-    player2 = 0;
-    player3 = 0;
-    player4 = 0;
-    player5 = 0;
-    if(!serial->response[0].isEmpty()){
-        for(cont=0;cont!=7;cont++){
-            if((pregArray[cont].getRespCorrect()+64)==serial->response[0][2+cont*3])
-                player1++;
+    for(cont=0;cont!=_players_total_;cont++){
+        player[cont]=0;
+    }
+    for(cont2=0;cont2<_players_total_;cont2++){
+        if(!serial->response[cont2].isEmpty()){
+            for(cont=0;cont!=7;cont++){
+                if((pregArray[cont].getRespCorrect()+64)==serial->response[cont2][2+cont*3])
+                    player[cont2]++;
+            }
         }
     }
-    if(!serial->response[1].isEmpty()){
-        for(cont=0;cont!=7;cont++){
-            if((pregArray[cont].getRespCorrect()+64)==serial->response[1][2+cont*3])
-                player2++;
-        }
-    }
-    if(!serial->response[2].isEmpty()){
-        for(cont=0;cont!=7;cont++){
-            if((pregArray[cont].getRespCorrect()+64)==serial->response[2][2+cont*3])
-                player3++;
-        }
-    }
-    if(!serial->response[3].isEmpty()){
-        for(cont=0;cont!=7;cont++){
-            if((pregArray[cont].getRespCorrect()+64)==serial->response[3][2+cont*3])
-                player4++;
-        }
-    }
-    if(!serial->response[4].isEmpty()){
-        for(cont=0;cont!=7;cont++){
-            if((pregArray[cont].getRespCorrect()+64)==serial->response[4][2+cont*3])
-                player5++;
-        }
-    }
-
-    scoreBoardWindow(player1,player2,player3,player4,player5);
+    scoreBoardWindow(player);
 }
 
 void MainWindow::on_replayButton_clicked()
 {
+    int i;
     ui->gameState->setCurrentIndex(0);
 
     ui->pregButton_2->setVisible(false);
@@ -361,80 +338,62 @@ void MainWindow::on_replayButton_clicked()
     ui->pregButton_5->setVisible(false);
     ui->pregButton_6->setVisible(false);
     ui->pregButton_7->setVisible(false);
-    serial->response[0].clear();
-    serial->response[1].clear();
-    serial->response[2].clear();
-    serial->response[3].clear();
-    serial->response[4].clear();
-    pregArray[0].borrarPregunta();
-    pregArray[1].borrarPregunta();
-    pregArray[2].borrarPregunta();
-    pregArray[3].borrarPregunta();
-    pregArray[4].borrarPregunta();
-    pregArray[5].borrarPregunta();
-    pregArray[6].borrarPregunta();
+    for(i=0;i<_players_total_;i++){
+        serial->response[i].clear();
+        pregArray[i].borrarPregunta();
+    }
     on_pregButton_1_clicked();
 }
 
-void MainWindow::scoreBoardWindow(int p1, int p2, int p3, int p4, int p5){
-    scoreBoardHelper players[5];
+void MainWindow::scoreBoardWindow(int p[]){
+    scoreBoardHelper players[8];
     scoreBoardHelper bestPlayer;
-    int cont,index;
+    int cont,index,cont2;
 
-    players[0].setPlayer(p1,1);
-    players[1].setPlayer(p2,2);
-    players[2].setPlayer(p3,3);
-    players[3].setPlayer(p4,4);
-    players[4].setPlayer(p5,5);
+    for(cont=0;cont<_players_total_;cont++){
+        players[cont].setPlayer(p[cont],cont+1);
+    }
     bestPlayer.setPlayer(-1,0);
 
-    for(cont=0,index=0;cont!=5;cont++){
-        if(players[cont].getScore()>bestPlayer.getScore()){
-            bestPlayer.copy(players[cont]);
-            index = cont;
+    for(cont2=0;cont2<8;cont2++){
+        for(cont=0,index=0;cont<8;cont++){
+            if(players[cont].getScore()>bestPlayer.getScore()){
+                bestPlayer.copy(players[cont]);
+                index = cont;
+            }
         }
+        players[index].setPlayer(-2,0);
+        switch(cont2){
+        case 0:
+            ui->puntajePrimerPuesto->setText("<p>1.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
+            break;
+        case 1:
+            ui->puntajeSegundoPuesto->setText("<p>2.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
+            break;
+        case 2:
+            ui->puntajeTercerPuesto->setText("<p>3.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
+            break;
+        case 3:
+            ui->puntajeCuartoPuesto->setText("<p>4.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
+            break;
+        case 4:
+            ui->puntajeQuintoPuesto->setText("<p>5.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
+            break;
+        case 5:
+            ui->puntajeSextoPuesto->setText("<p>6.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
+            break;
+        case 6:
+            ui->puntajeSeptimoPuesto->setText("<p>7.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
+            break;
+        case 7:
+            ui->puntajeOctavoPuesto->setText("<p>8.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
+            break;
+        default:
+            break;
+        }
+        bestPlayer.setPlayer(-1,0);
     }
-    players[index].setPlayer(-2,0);
-    ui->puntajePrimerPuesto->setText("<p>1.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
-    bestPlayer.setPlayer(-1,0);
 
-    for(cont=0,index=0;cont!=5;cont++){
-        if(players[cont].getScore()>bestPlayer.getScore()){
-            bestPlayer.copy(players[cont]);
-            index = cont;
-        }
-    }
-    players[index].setPlayer(-2,0);
-    ui->puntajeSegundoPuesto->setText("<p>2.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
-    bestPlayer.setPlayer(-1,0);
-
-    for(cont=0,index=0;cont!=5;cont++){
-        if(players[cont].getScore()>bestPlayer.getScore()){
-            bestPlayer.copy(players[cont]);
-            index = cont;
-        }
-    }
-    players[index].setPlayer(-2,0);
-    ui->puntajeTercerPuesto->setText("<p>3.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
-    bestPlayer.setPlayer(-1,0);
-
-    for(cont=0,index=0;cont!=5;cont++){
-        if(players[cont].getScore()>bestPlayer.getScore()){
-            bestPlayer.copy(players[cont]);
-            index = cont;
-        }
-    }
-    players[index].setPlayer(-2,0);
-    ui->puntajeCuartoPuesto->setText("<p>4.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
-    bestPlayer.setPlayer(-1,0);
-
-    for(cont=0,index=0;cont!=5;cont++){
-        if(players[cont].getScore()>bestPlayer.getScore()){
-            bestPlayer.copy(players[cont]);
-            index = cont;
-        }
-    }
-    ui->puntajeQuintoPuesto->setText("<p>5.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
 }
 
 void MainWindow::on_pregunta_textChanged()

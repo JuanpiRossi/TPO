@@ -2,15 +2,16 @@
 #define SERIALPORT_H
 
 #include <QtSerialPort/QSerialPort>
+#include "mainwindow.h"
 #include "filehandler.h"
 #include "preguntas.h"
 #include <qbytearray.h>
 #include <QTimer>
 #include <QObject>
 
-#define TIMERENVIODATOS 1000
-#define TIMERESPERARESPUESTA 1000
-#define TIMERECIBIRPUNTOS 3000
+#define TIMERENVIODATOS 200
+#define TIMERESPERARESPUESTA 200
+#define TIMERECIBIRPUNTOS 200
 
 class serialPort : public QObject
 {
@@ -33,7 +34,7 @@ private:
     QTimer *timer;
     QTimer *timerConfirmacion;
     QTimer *timerReenvio;
-    QByteArray idRetryInfo[5];
+    QByteArray idRetryInfo[_players_total_];
     preguntas pregArrayBuffer[7];
     QByteArrayList retryList;
 public slots:
@@ -56,9 +57,9 @@ public:
     QByteArray generateMsg(int id, char accion1, char accion2, int msg);
     void envioConfirmacion();
     void createMsgReenvio();
-    int idRetrys[5];
+    int idRetrys[7];
     void write(QByteArray sendQByteArray);
-    QByteArray response[5];
+    QByteArray response[7];
     void createRetryListFull();
 };
 

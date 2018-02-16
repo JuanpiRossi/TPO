@@ -1,6 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#define _players_total_ 8
+#define _repeat_message_ 3
+
 #include <QMainWindow>
 #include "config.h"
 #include "preguntas.h"
@@ -72,7 +75,7 @@ private slots:
 
     void on_replayButton_clicked();
 
-    void scoreBoardWindow(int p1, int p2, int p3, int p4, int p5);
+    void scoreBoardWindow(int p[]);
 
     void on_pregunta_textChanged();
 

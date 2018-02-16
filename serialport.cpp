@@ -4,15 +4,16 @@
 
 serialPort::serialPort()
 {
+    int c;
     serial = new QSerialPort(this);
     flowControlGlobal = QSerialPort::NoFlowControl;
     QString fileContent = file.readFile();
     QRegExp rx("playTime:([0-9]*)\n"
-               "portName:([^\n]*)\n"
-               "baudios:([^\n]*)\n"
-               "paridad:([^\n]*)\n"
-               "bitsDatos:([^\n]*)\n"
-               "bitStop:([^\n]*)");
+       "portName:([^\n]*)\n"
+       "baudios:([^\n]*)\n"
+       "paridad:([^\n]*)\n"
+       "bitsDatos:([^\n]*)\n"
+       "bitStop:([^\n]*)");
     rx.indexIn(fileContent);
 
     portNameString = rx.capturedTexts()[2];
@@ -20,11 +21,8 @@ serialPort::serialPort()
     parityString = rx.capturedTexts()[4];
     dataBitsString = rx.capturedTexts()[5];
     stopBitsString = rx.capturedTexts()[6];
-    idRetrys[0] = 0;
-    idRetrys[1] = 0;
-    idRetrys[2] = 0;
-    idRetrys[3] = 0;
-    idRetrys[4] = 0;
+    for(c=0;c<_players_total_;c++)
+        idRetrys[c] = 0;
 
     timer = new QTimer(this);
     timerConfirmacion = new QTimer(this);
@@ -58,11 +56,11 @@ void serialPort::open(){
 void serialPort::loadConfig(){
     QString fileContent = file.readFile();
     QRegExp rx("playTime:([0-9]*)\n"
-               "portName:([^\n]*)\n"
-               "baudios:([^\n]*)\n"
-               "paridad:([^\n]*)\n"
-               "bitsDatos:([^\n]*)\n"
-               "bitStop:([^\n]*)");
+       "portName:([^\n]*)\n"
+       "baudios:([^\n]*)\n"
+       "paridad:([^\n]*)\n"
+       "bitsDatos:([^\n]*)\n"
+       "bitStop:([^\n]*)");
     rx.indexIn(fileContent);
 
     portNameString = rx.capturedTexts()[2];
@@ -124,57 +122,60 @@ void serialPort::close(){
 }
 
 void serialPort::createMsg(preguntas *pregArray){
-    int cont,maxPreg;
+    int cont,maxPreg,auxcont;
     QByteArray tmpQByte;
     msgArray.clear();
 
-    pregArrayBuffer[0] = pregArray[0];
-    pregArrayBuffer[1] = pregArray[1];
-    pregArrayBuffer[2] = pregArray[2];
-    pregArrayBuffer[3] = pregArray[3];
-    pregArrayBuffer[4] = pregArray[4];
-    pregArrayBuffer[5] = pregArray[5];
-    pregArrayBuffer[6] = pregArray[6];
+    for(cont=0;cont<7;cont++)
+    {
+        pregArrayBuffer[cont] = pregArray[cont];
+    }
 
     for(cont=0,maxPreg=0;cont!=7;cont++){
         if(pregArray[cont].getCantResp()>0)
             maxPreg++;
     }
     if(maxPreg!=0){
-        tmpQByte = generateMsg(255,'X','X',maxPreg);
-        msgArray << tmpQByte;
+        for(auxcont=0;auxcont<_repeat_message_;auxcont++)
+        {
+            tmpQByte = generateMsg(255,'X','X',maxPreg);
+            msgArray << tmpQByte;
+        }
 
-        for(cont=0;cont!=(maxPreg+1);cont++){
-            if(pregArray[cont].getCantResp()>0){
-                tmpQByte = generateMsg(255,'P',cont+1,pregArray[cont].getPregunta());
-                msgArray << tmpQByte;
-                tmpQByte = generateMsg(255,'N',cont+1,pregArray[cont].getCantResp());
-                msgArray << tmpQByte;
-                switch(pregArray[cont].getCantResp()){
-                case 2:
-                    tmpQByte = generateMsg(255,'A',cont+1,pregArray[cont].getRespuestaA());
+        for(auxcont=0;auxcont<_repeat_message_;auxcont++)
+        {
+            for(cont=0;cont!=(maxPreg+1);cont++){
+                if(pregArray[cont].getCantResp()>0){
+                    tmpQByte = generateMsg(255,'P',cont+1,pregArray[cont].getPregunta());
                     msgArray << tmpQByte;
-                    tmpQByte = generateMsg(255,'B',cont+1,pregArray[cont].getRespuestaB());
+                    tmpQByte = generateMsg(255,'N',cont+1,pregArray[cont].getCantResp());
                     msgArray << tmpQByte;
-                    break;
-                case 3:
-                    tmpQByte = generateMsg(255,'A',cont+1,pregArray[cont].getRespuestaA());
-                    msgArray << tmpQByte;
-                    tmpQByte = generateMsg(255,'B',cont+1,pregArray[cont].getRespuestaB());
-                    msgArray << tmpQByte;
-                    tmpQByte = generateMsg(255,'C',cont+1,pregArray[cont].getRespuestaC());
-                    msgArray << tmpQByte;
-                    break;
-                case 4:
-                    tmpQByte = generateMsg(255,'A',cont+1,pregArray[cont].getRespuestaA());
-                    msgArray << tmpQByte;
-                    tmpQByte = generateMsg(255,'B',cont+1,pregArray[cont].getRespuestaB());
-                    msgArray << tmpQByte;
-                    tmpQByte = generateMsg(255,'C',cont+1,pregArray[cont].getRespuestaC());
-                    msgArray << tmpQByte;
-                    tmpQByte = generateMsg(255,'D',cont+1,pregArray[cont].getRespuestaD());
-                    msgArray << tmpQByte;
-                    break;
+                    switch(pregArray[cont].getCantResp()){
+                        case 2:
+                        tmpQByte = generateMsg(255,'A',cont+1,pregArray[cont].getRespuestaA());
+                        msgArray << tmpQByte;
+                        tmpQByte = generateMsg(255,'B',cont+1,pregArray[cont].getRespuestaB());
+                        msgArray << tmpQByte;
+                        break;
+                        case 3:
+                        tmpQByte = generateMsg(255,'A',cont+1,pregArray[cont].getRespuestaA());
+                        msgArray << tmpQByte;
+                        tmpQByte = generateMsg(255,'B',cont+1,pregArray[cont].getRespuestaB());
+                        msgArray << tmpQByte;
+                        tmpQByte = generateMsg(255,'C',cont+1,pregArray[cont].getRespuestaC());
+                        msgArray << tmpQByte;
+                        break;
+                        case 4:
+                        tmpQByte = generateMsg(255,'A',cont+1,pregArray[cont].getRespuestaA());
+                        msgArray << tmpQByte;
+                        tmpQByte = generateMsg(255,'B',cont+1,pregArray[cont].getRespuestaB());
+                        msgArray << tmpQByte;
+                        tmpQByte = generateMsg(255,'C',cont+1,pregArray[cont].getRespuestaC());
+                        msgArray << tmpQByte;
+                        tmpQByte = generateMsg(255,'D',cont+1,pregArray[cont].getRespuestaD());
+                        msgArray << tmpQByte;
+                        break;
+                    }
                 }
             }
         }
@@ -231,13 +232,10 @@ void serialPort::enviarMsgTimer(){
 
     write(msgArray[cont]);
     cont++;
-    if(cont==msgArray.size()){
+    if(cont>=msgArray.size()){
+        for(cont=0;cont<_players_total_;cont++)
+            idRetrys[cont] = 0;
         cont=0;
-        idRetrys[0] = 0;
-        idRetrys[1] = 0;
-        idRetrys[2] = 0;
-        idRetrys[3] = 0;
-        idRetrys[4] = 0;
         timer->stop();
         envioConfirmacion();
     }
@@ -251,17 +249,22 @@ void serialPort::envioConfirmacionTimer(){
     static int id=0, retry=0;
     QByteArray tmp;
 
-    if(id>=5){
+    if(id>=_players_total_){
+        int retryflag=0,i;
         timerConfirmacion->stop();
-        for(id=0;id!=5;id++){
+        for(id=0;id<_players_total_;id++){
             if(idRetrys[id]!=-1){
                 idRetrys[id]++;
             }
         }
         id = 0;
-        if(idRetrys[0]!=-1||idRetrys[1]!=-1||idRetrys[2]!=-1||idRetrys[3]!=-1||idRetrys[4]!=-1){
+        for(i=0;i<_players_total_;i++){
+            if(idRetrys[i]==-1)
+                retryflag++;
+        }
+        if(retryflag!=0){
             retry++;
-            if(retry!=3){
+            if(retry!=_repeat_message_){
                 createMsgReenvio();
             }
             else{
@@ -275,10 +278,16 @@ void serialPort::envioConfirmacionTimer(){
             emit(beginGame());
         }
     }   else    {
-        id++;
-        if(idRetrys[id-1]!=-1){
-            tmp = generateMsg(id,'G',id,63);
-            write(tmp);
+        static int c=0;
+        if(c<_repeat_message_){
+            if(idRetrys[id]!=-1){
+                tmp = generateMsg(id,'G',id,63);
+                write(tmp);
+            }
+            c++;
+        }else{
+            c=0;
+            id++;
         }
     }
 }
@@ -306,15 +315,15 @@ void serialPort::readData(){
         }
     }
     if(read[0]=='<'&&read[3]=='R'&&read[4]=='F'&&read[5]=='P'&&read[6]==char(1)&&
-       read[8]=='P'&&read[9]==char(2)&&read[11]=='P'&&read[12]==char(3)&&read[14]=='P'&&read[15]==char(4)&&
-       read[17]=='P'&&read[18]==char(5)&&read[20]=='P'&&read[21]==char(6)&&read[23]=='P'&&read[24]==char(7)){
+        read[8]=='P'&&read[9]==char(2)&&read[11]=='P'&&read[12]==char(3)&&read[14]=='P'&&read[15]==char(4)&&
+        read[17]=='P'&&read[18]==char(5)&&read[20]=='P'&&read[21]==char(6)&&read[23]=='P'&&read[24]==char(7)){
         if(read[2]>=char(1)&&read[2]<=char(5)){
             if(read[6+read[1]]=='>'){
                 response[read[2]-1].resize(read[1]);
                 for(cont=0;cont!=read[1];cont++)
                     response[read[2]-1][cont] = read[cont+5];
                 for(cont=0,XoR=0;cont!=read[1];cont++)
-                    XoR = XoR^read[cont+5];
+                    XoR ^= read[cont+5];
                 if(!(XoR==read[5+read[1]]))
                     response[read[2]-1].clear();
             }
@@ -323,59 +332,23 @@ void serialPort::readData(){
 }
 
 void serialPort::createMsgReenvio(){
-    int idRetrySize[5],cont;
+    int idRetrySize[_players_total_],cont,cont2;
     QByteArray tmp;
     tmp.clear();
-    idRetrySize[0] = idRetryInfo[0].size()/2;
-    idRetrySize[1] = idRetryInfo[1].size()/2;
-    idRetrySize[2] = idRetryInfo[2].size()/2;
-    idRetrySize[3] = idRetryInfo[3].size()/2;
-    idRetrySize[4] = idRetryInfo[4].size()/2;
+    for(cont=0;cont<=_players_total_;cont++){
+        idRetrySize[cont] = idRetryInfo[cont].size()/2;
+    }
     retryList.clear();
-    for(cont=0;cont<=idRetrySize[0];cont++){
-        tmp.clear();
-        tmp.resize(2);
-        tmp[0] = idRetryInfo[0][cont];
-        cont++;
-        tmp[1] = idRetryInfo[0][cont];
-        if(tmp[0]!=char(0)&&tmp[1]!=char(0)&&!retryList.contains(tmp))
-            retryList << tmp;
-    }
-    for(cont=0;cont<=idRetrySize[1];cont++){
-        tmp.clear();
-        tmp.resize(2);
-        tmp[0] = idRetryInfo[1][cont];
-        cont++;
-        tmp[1] = idRetryInfo[1][cont];
-        if(tmp[0]!=char(0)&&tmp[1]!=char(0)&&!retryList.contains(tmp))
-            retryList << tmp;
-    }
-    for(cont=0;cont<=idRetrySize[2];cont++){
-        tmp.clear();
-        tmp.resize(2);
-        tmp[0] = idRetryInfo[2][cont];
-        cont++;
-        tmp[1] = idRetryInfo[2][cont];
-        if(tmp[0]!=char(0)&&tmp[1]!=char(0)&&!retryList.contains(tmp))
-            retryList << tmp;
-    }
-    for(cont=0;cont<=idRetrySize[3];cont++){
-        tmp.clear();
-        tmp.resize(2);
-        tmp[0] = idRetryInfo[3][cont];
-        cont++;
-        tmp[1] = idRetryInfo[3][cont];
-        if(tmp[0]!=char(0)&&tmp[1]!=char(0)&&!retryList.contains(tmp))
-            retryList << tmp;
-    }
-    for(cont=0;cont<=idRetrySize[4];cont++){
-        tmp.clear();
-        tmp.resize(2);
-        tmp[0] = idRetryInfo[4][cont];
-        cont++;
-        tmp[1] = idRetryInfo[4][cont];
-        if(tmp[0]!=char(0)&&tmp[1]!=char(0)&&!retryList.contains(tmp))
-            retryList << tmp;
+    for(cont2=0;cont2<_players_total_;cont2++){
+        for(cont=0;cont<=idRetrySize[cont2];cont++){
+            tmp.clear();
+            tmp.resize(2);
+            tmp[0] = idRetryInfo[cont2][cont];
+            cont++;
+            tmp[1] = idRetryInfo[cont2][cont];
+            if(tmp[0]!=char(0)&&tmp[1]!=char(0)&&!retryList.contains(tmp))
+                retryList << tmp;
+        }
     }
     qDebug() << retryList.indexOf("XX");
     if(retryList.indexOf("XX")!=-1){
@@ -394,7 +367,7 @@ void serialPort::envioReenvioTimer(){
     qDebug() << "Retry list: " << retryList << "Size> " << size;
     if(!retryList.isEmpty()){
         switch(retryList[cont][0]){
-        case 'P':
+            case 'P':
             if(retryList[cont][1]>=char(1)&&retryList[cont][1]<=char(7)){
                 if(pregArrayBuffer[retryList[cont][1]-1].getCantResp()!=0){
                     tmp = generateMsg(255,'P',retryList[cont][1],pregArrayBuffer[retryList[cont][1]-1].getPregunta());
@@ -402,7 +375,7 @@ void serialPort::envioReenvioTimer(){
                 }
             }
             break;
-        case 'A':
+            case 'A':
             if(retryList[cont][1]>=char(1)&&retryList[cont][1]<=char(7)){
                 if(pregArrayBuffer[retryList[cont][1]-1].getCantResp()!=0){
                     tmp = generateMsg(255,'A',retryList[cont][1],pregArrayBuffer[retryList[cont][1]-1].getRespuestaA());
@@ -410,7 +383,7 @@ void serialPort::envioReenvioTimer(){
                 }
             }
             break;
-        case 'B':
+            case 'B':
             if(retryList[cont][1]>=char(1)&&retryList[cont][1]<=char(7)){
                 if(pregArrayBuffer[retryList[cont][1]-1].getCantResp()!=0){
                     tmp = generateMsg(255,'B',retryList[cont][1],pregArrayBuffer[retryList[cont][1]-1].getRespuestaB());
@@ -418,7 +391,7 @@ void serialPort::envioReenvioTimer(){
                 }
             }
             break;
-        case 'C':
+            case 'C':
             if(retryList[cont][1]>=char(1)&&retryList[cont][1]<=char(7)){
                 if(pregArrayBuffer[retryList[cont][1]-1].getCantResp()!=0){
                     tmp = generateMsg(255,'C',retryList[cont][1],pregArrayBuffer[retryList[cont][1]-1].getRespuestaC());
@@ -426,7 +399,7 @@ void serialPort::envioReenvioTimer(){
                 }
             }
             break;
-        case 'D':
+            case 'D':
             if(retryList[cont][1]>=char(1)&&retryList[cont][1]<=char(7)){
                 if(pregArrayBuffer[retryList[cont][1]-1].getCantResp()!=0){
                     tmp = generateMsg(255,'D',retryList[cont][1],pregArrayBuffer[retryList[cont][1]-1].getRespuestaD());
@@ -434,7 +407,7 @@ void serialPort::envioReenvioTimer(){
                 }
             }
             break;
-        case 'N':
+            case 'N':
             if(retryList[cont][1]>=char(1)&&retryList[cont][1]<=char(7)){
                 if(pregArrayBuffer[retryList[cont][1]-1].getCantResp()!=0){
                     tmp = generateMsg(255,'N',retryList[cont][1],pregArrayBuffer[retryList[cont][1]-1].getCantResp());
@@ -442,11 +415,11 @@ void serialPort::envioReenvioTimer(){
                 }
             }
             break;
-        case 'X':
+            case 'X':
             if(retryList[cont][1]=='X'){
                 for(contMax=0,maxPreg=0;contMax!=7;contMax++){
-                        if(pregArrayBuffer[contMax].getCantResp()>0)
-                            maxPreg++;
+                    if(pregArrayBuffer[contMax].getCantResp()>0)
+                        maxPreg++;
                 }
                 tmp = generateMsg(255,'X','X',maxPreg);
                 write(tmp);
