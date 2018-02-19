@@ -311,7 +311,7 @@ void MainWindow::pedirPuntajes(){
 
 void MainWindow::procesarPuntajes(){
     int cont,cont2;
-    int player[7];
+    int player[8];
     ui->gameState->setCurrentIndex(2);
     for(cont=0;cont!=_players_total_;cont++){
         player[cont]=0;
@@ -340,8 +340,12 @@ void MainWindow::on_replayButton_clicked()
     ui->pregButton_7->setVisible(false);
     for(i=0;i<_players_total_;i++){
         serial->response[i].clear();
-        pregArray[i].borrarPregunta();
     }
+    for(i=0;i<7;i++){
+       pregArray[i].borrarPregunta();
+    }
+    currentPreg=1;
+    maxPreg=1;
     on_pregButton_1_clicked();
 }
 

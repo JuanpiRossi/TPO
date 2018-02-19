@@ -9,9 +9,9 @@
 #include <QTimer>
 #include <QObject>
 
-#define TIMERENVIODATOS 200
-#define TIMERESPERARESPUESTA 200
-#define TIMERECIBIRPUNTOS 200
+#define TIMERENVIODATOS 150
+#define TIMERESPERARESPUESTA 150
+#define TIMERECIBIRPUNTOS 150
 
 class serialPort : public QObject
 {
@@ -57,9 +57,9 @@ public:
     QByteArray generateMsg(int id, char accion1, char accion2, int msg);
     void envioConfirmacion();
     void createMsgReenvio();
-    int idRetrys[7];
+    int idRetrys[_players_total_];
     void write(QByteArray sendQByteArray);
-    QByteArray response[7];
+    QByteArray response[_players_total_];
     void createRetryListFull();
 };
 

@@ -13,6 +13,7 @@
 #include "serialport.h"
 #include "filehandler.h"
 #include "scoreboardhelper.h"
+class serialPort;
 
 namespace Ui {
 class MainWindow;

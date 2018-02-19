@@ -4,7 +4,6 @@
 
 serialPort::serialPort()
 {
-    int c;
     serial = new QSerialPort(this);
     flowControlGlobal = QSerialPort::NoFlowControl;
     QString fileContent = file.readFile();
@@ -21,8 +20,6 @@ serialPort::serialPort()
     parityString = rx.capturedTexts()[4];
     dataBitsString = rx.capturedTexts()[5];
     stopBitsString = rx.capturedTexts()[6];
-    for(c=0;c<_players_total_;c++)
-        idRetrys[c] = 0;
 
     timer = new QTimer(this);
     timerConfirmacion = new QTimer(this);
@@ -48,8 +45,11 @@ bool serialPort::isOpen(){
 }
 
 void serialPort::open(){
+    int c;
     serial->setPortName(portNameString);
     loadConfig();
+    for(c=0;c<_players_total_;c++)
+        idRetrys[c] = 0;
     serial->open(QIODevice::ReadWrite);
 }
 
@@ -285,9 +285,10 @@ void serialPort::envioConfirmacionTimer(){
                 write(tmp);
             }
             c++;
-        }else{
-            c=0;
-            id++;
+            if(c>=_repeat_message_){
+                c=0;
+                id++;
+            }
         }
     }
 }
@@ -297,8 +298,9 @@ void serialPort::readData(){
     QByteArray read = serial->readAll();
     qDebug() << "Recibido: " << read.toHex();
     if(read[0]=='<'&&read[1]==char(1)&&read[3]=='R'&&read[4]=='O'&&read[5]==read[6]&&read[7]=='>'){
-        if(read[2]>=char(1)&&read[2]<=char(5)){
-            idRetrys[read[2]-1] = -1;
+        if(read[2]>=char(0)&&read[2]<=char(7)){
+
+            idRetrys[read[2]] = -1;
         }
     }
     if(read[0]=='<'&&read[3]=='R'&&read[4]=='M'){
@@ -310,7 +312,7 @@ void serialPort::readData(){
                 for(cont=0,XoR=0;cont!=read[1];cont++)
                     XoR = XoR^read[cont+5];
                 if(!(XoR==read[5+read[1]]))
-                    idRetryInfo[read[2]-1].clear();
+                    idRetryInfo[read[2]].clear();
             }
         }
     }
@@ -319,13 +321,13 @@ void serialPort::readData(){
         read[17]=='P'&&read[18]==char(5)&&read[20]=='P'&&read[21]==char(6)&&read[23]=='P'&&read[24]==char(7)){
         if(read[2]>=char(1)&&read[2]<=char(5)){
             if(read[6+read[1]]=='>'){
-                response[read[2]-1].resize(read[1]);
+                response[read[2]].resize(read[1]);
                 for(cont=0;cont!=read[1];cont++)
-                    response[read[2]-1][cont] = read[cont+5];
+                    response[read[2]][cont] = read[cont+5];
                 for(cont=0,XoR=0;cont!=read[1];cont++)
                     XoR ^= read[cont+5];
                 if(!(XoR==read[5+read[1]]))
-                    response[read[2]-1].clear();
+                    response[read[2]].clear();
             }
         }
     }
