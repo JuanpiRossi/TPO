@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #define _players_total_ 8
-#define _repeat_message_ 3
+#define _repeat_message_ 6
 
 #include <QMainWindow>
 #include "config.h"

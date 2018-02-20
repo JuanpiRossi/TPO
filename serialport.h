@@ -9,9 +9,9 @@
 #include <QTimer>
 #include <QObject>
 
-#define TIMERENVIODATOS 150
-#define TIMERESPERARESPUESTA 150
-#define TIMERECIBIRPUNTOS 150
+#define TIMERENVIODATOS 70
+#define TIMERESPERARESPUESTA 70
+#define TIMERECIBIRPUNTOS 70
 
 class serialPort : public QObject
 {
