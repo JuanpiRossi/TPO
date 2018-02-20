@@ -324,15 +324,15 @@ void serialPort::readData(){
     if(read[0]=='<'&&read[3]=='R'&&read[4]=='F'&&read[5]=='P'&&read[6]==char(1)&&
             read[8]=='P'&&read[9]==char(2)&&read[11]=='P'&&read[12]==char(3)&&read[14]=='P'&&read[15]==char(4)&&
             read[17]=='P'&&read[18]==char(5)&&read[20]=='P'&&read[21]==char(6)&&read[23]=='P'&&read[24]==char(7)){
-        if(read[2]>=char(1)&&read[2]<=char(5)){
+        if(read[2]>=char(1)&&read[2]<=char(7)){
             if(read[6+read[1]]=='>'){
-                response[read[2]].resize(read[1]);
+                response[read[2]-1].resize(read[1]);
                 for(cont=0;cont!=read[1];cont++)
-                    response[read[2]][cont] = read[cont+5];
+                    response[read[2]-1][cont] = read[cont+5];
                 for(cont=0,XoR=0;cont!=read[1];cont++)
                     XoR ^= read[cont+5];
                 if(!(XoR==read[5+read[1]]))
-                    response[read[2]].clear();
+                    response[read[2]-1].clear();
             }
         }
     }

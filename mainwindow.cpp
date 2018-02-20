@@ -284,16 +284,22 @@ void MainWindow::empezarJuego(){
 }
 
 void MainWindow::finJuego(){
+    int i;
+    for(i=0;i<_players_total_;i++){
+        serial->response[i].clear();
+    }
     timerGetResp->start(TIMERECIBIRPUNTOS);
 }
 
 void MainWindow::pedirPuntajes(){
     static int id=0;
     QByteArray tmp;
-    while(!serial->response[id/_repeat_message_].isEmpty()
-          &&(id<(_players_total_*_repeat_message_))
+    while((id<(_players_total_*_repeat_message_))
           &&id>=_repeat_message_){
-        id++;
+        if(!serial->response[(id/_repeat_message_)-1].isEmpty())
+            id++;
+        else
+            break;
     }
     if(id<(_players_total_*_repeat_message_)){
         if(id<_repeat_message_)   {
