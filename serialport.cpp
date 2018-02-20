@@ -370,7 +370,7 @@ void serialPort::createMsgReenvio(){
 void serialPort::envioReenvioTimer(){
     int size = retryList.size();
     int maxPreg,contMax;
-    static int cont=0;
+    static int cont=0,contrepeatmsg=0;
     QByteArray tmp;
 
     qDebug() << "Retry list: " << retryList << "Size> " << size;
@@ -436,7 +436,13 @@ void serialPort::envioReenvioTimer(){
             break;
         }
     }
-    cont++;
+    if(contrepeatmsg<_repeat_message_){
+        contrepeatmsg++;
+        if(contrepeatmsg>=_repeat_message_){
+            cont++;
+            contrepeatmsg=0;
+        }
+    }
     if(cont>=size){
         cont=0;
         timerReenvio->stop();
