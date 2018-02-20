@@ -290,7 +290,11 @@ void MainWindow::finJuego(){
 void MainWindow::pedirPuntajes(){
     static int id=0;
     QByteArray tmp;
-
+    while(!serial->response[id/_repeat_message_].isEmpty()
+          &&(id<(_players_total_*_repeat_message_))
+          &&id>=_repeat_message_){
+        id++;
+    }
     if(id<(_players_total_*_repeat_message_)){
         if(id<_repeat_message_)   {
             tmp = serial->generateMsg(255,'F','F',1);

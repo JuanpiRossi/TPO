@@ -282,7 +282,7 @@ void serialPort::envioConfirmacionTimer(){
         }
         if(retryflag!=0){
             retry++;
-            if(retry!=_repeat_message_){
+            if(retry<_repeat_message_){
                 createMsgReenvio();
             }
             else{
