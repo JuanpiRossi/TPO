@@ -6,6 +6,7 @@
 #include <string>
 preguntas pregArray[7];
 int currentPreg=1,maxPreg=1;
+int timeTranscursoJuego=0;
 #define ERRORCOMUNICACION 2
 #define ERRORGUARDAR 1
 
@@ -22,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
     timerError = new QTimer(this);
     timerGuardada = new QTimer(this);
     QObject::connect(configInstance,SIGNAL(exiting()),this,SLOT(reactivateConfig()));
+    QObject::connect(timer,SIGNAL(timeout()),this,SLOT(transcursoJuego()));
     QObject::connect(prevInstance,SIGNAL(exiting()),this,SLOT(reactivatePrev()));
     QObject::connect(serial,SIGNAL(beginGame()),this,SLOT(empezarJuego()));
     QObject::connect(timerGetResp,SIGNAL(timeout()),this,SLOT(pedirPuntajes()));
@@ -242,7 +244,7 @@ void MainWindow::on_startButton_clicked()
 {
     if(pregArray[0].getCantResp()!=0){
         serial->createMsg(pregArray);
-        serial->open();
+        serial->open(true);
         if(serial->isOpen()){
             ui->gameState->setCurrentIndex(1);
             serial->enviarMsg();
@@ -276,11 +278,25 @@ void MainWindow::empezarJuego(){
         gameTimer = rx.capturedTexts()[1].toInt();
         tmp = serial->generateMsg(255,'E','E',gameTimer);
         for(count=0;count<_repeat_message_;count++){
-        serial->write(tmp);
+            serial->write(tmp);
         }
-        timer->singleShot(gameTimer*1000,this,SLOT(finJuego()));
+        ui->lcdNumber->display(gameTimer);
+        timeTranscursoJuego=gameTimer;
+        ui->gameState->setCurrentIndex(2);
+        timer->start(1000);
     }   else
         ui->gameState->setCurrentIndex(0);
+}
+
+void MainWindow::transcursoJuego(){
+    if(timeTranscursoJuego>0){
+        timeTranscursoJuego--;
+        ui->lcdNumber->display(timeTranscursoJuego);
+    }else
+    {
+        timer->stop();
+        finJuego();
+    }
 }
 
 void MainWindow::finJuego(){
@@ -322,7 +338,7 @@ void MainWindow::pedirPuntajes(){
 void MainWindow::procesarPuntajes(){
     int cont,cont2;
     int player[8];
-    ui->gameState->setCurrentIndex(2);
+    ui->gameState->setCurrentIndex(3);
     for(cont=0;cont!=_players_total_;cont++){
         player[cont]=0;
     }
@@ -332,6 +348,9 @@ void MainWindow::procesarPuntajes(){
                 if((pregArray[cont].getRespCorrect()+64)==serial->response[cont2][2+cont*3])
                     player[cont2]++;
             }
+        }else
+        {
+            player[cont2]=-1;
         }
     }
     scoreBoardWindow(player);
@@ -352,7 +371,7 @@ void MainWindow::on_replayButton_clicked()
         serial->response[i].clear();
     }
     for(i=0;i<7;i++){
-       pregArray[i].borrarPregunta();
+        pregArray[i].borrarPregunta();
     }
     currentPreg=1;
     maxPreg=1;
@@ -379,35 +398,58 @@ void MainWindow::scoreBoardWindow(int p[]){
         players[index].setPlayer(-2,0);
         switch(cont2){
         case 0:
-            ui->puntajePrimerPuesto->setText("<p>1.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
+            if(bestPlayer.getScore()>=0)
+                ui->puntajePrimerPuesto->setText("<p>1.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
+            else
+                ui->puntajePrimerPuesto->setText("");
             break;
         case 1:
-            ui->puntajeSegundoPuesto->setText("<p>2.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
+            if(bestPlayer.getScore()>=0)
+                ui->puntajeSegundoPuesto->setText("<p>2.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
+            else
+                ui->puntajeSegundoPuesto->setText("");
             break;
         case 2:
-            ui->puntajeTercerPuesto->setText("<p>3.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
+            if(bestPlayer.getScore()>=0)
+                ui->puntajeTercerPuesto->setText("<p>3.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
+            else
+                ui->puntajeTercerPuesto->setText("");
             break;
         case 3:
-            ui->puntajeCuartoPuesto->setText("<p>4.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
+            if(bestPlayer.getScore()>=0)
+                ui->puntajeCuartoPuesto->setText("<p>4.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
+            else
+                ui->puntajeCuartoPuesto->setText("");
             break;
         case 4:
-            ui->puntajeQuintoPuesto->setText("<p>5.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
+            if(bestPlayer.getScore()>=0)
+                ui->puntajeQuintoPuesto->setText("<p>5.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
+            else
+                ui->puntajeQuintoPuesto->setText("");
             break;
         case 5:
-            ui->puntajeSextoPuesto->setText("<p>6.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
+            if(bestPlayer.getScore()>=0)
+                ui->puntajeSextoPuesto->setText("<p>6.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
+            else
+                ui->puntajeSextoPuesto->setText("");
             break;
         case 6:
-            ui->puntajeSeptimoPuesto->setText("<p>7.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
+            if(bestPlayer.getScore()>=0)
+                ui->puntajeSeptimoPuesto->setText("<p>7.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
+            else
+                ui->puntajeSeptimoPuesto->setText("");
             break;
         case 7:
-            ui->puntajeOctavoPuesto->setText("<p>8.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
+            if(bestPlayer.getScore()>=0)
+                ui->puntajeOctavoPuesto->setText("<p>8.- Jugador "+QString::number(bestPlayer.getPlayerNumber())+" : <strong>"+QString::number(bestPlayer.getScore())+" Puntos</strong></p>");
+            else
+                ui->puntajeOctavoPuesto->setText("");
             break;
         default:
             break;
         }
         bestPlayer.setPlayer(-1,0);
     }
-
 }
 
 void MainWindow::on_pregunta_textChanged()

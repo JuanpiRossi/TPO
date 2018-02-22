@@ -1,6 +1,7 @@
 #include "serialport.h"
 #include <qdebug.h>
 
+QString baud[]={"115200","57600","38400","19200","9600","4800","2400","1200"};
 
 serialPort::serialPort()
 {
@@ -44,15 +45,25 @@ bool serialPort::isOpen(){
     return serial->isOpen();
 }
 
-void serialPort::open(){
+void serialPort::open(bool isDefault){
     int c;
     serial->setPortName(portNameString);
-    loadConfig();
+    if(isDefault)
+        setDefaultConfig();
+    else{
+        setLoadedConfig();
+    }
     for(c=0;c<_players_total_;c++)
         idRetrys[c] = 0;
     serial->open(QIODevice::ReadWrite);
 }
-
+void serialPort::setDefaultConfig(){
+    serial->setBaudRate(QSerialPort::Baud115200);
+    serial->setDataBits(QSerialPort::Data8);
+    serial->setParity( QSerialPort::EvenParity);
+    serial->setStopBits(QSerialPort::TwoStop);
+    serial->setFlowControl(flowControlGlobal);
+}
 void serialPort::loadConfig(){
     QString fileContent = file.readFile();
     QRegExp rx("playTime:([0-9]*)\n"
@@ -82,14 +93,10 @@ void serialPort::loadConfig(){
         baudRateGlobal = QSerialPort::Baud38400;
     else if(baudsString=="57600")
         baudRateGlobal = QSerialPort::Baud57600;
-    else if(baudsString=="115200")
-        baudRateGlobal = QSerialPort::Baud115200;
     else
         baudRateGlobal = QSerialPort::Baud115200;
 
-    if(parityString=="Par")
-        parityGlobal = QSerialPort::EvenParity;
-    else if(parityString=="Impar")
+    if(parityString=="Impar")
         parityGlobal = QSerialPort::OddParity;
     else if(parityString=="Sin paridad")
         parityGlobal = QSerialPort::NoParity;
@@ -98,25 +105,21 @@ void serialPort::loadConfig(){
 
     if(dataBitsString=="7")
         dataBitsGlobal = QSerialPort::Data7;
-    else if(dataBitsString=="8")
-        dataBitsGlobal = QSerialPort::Data8;
     else
         dataBitsGlobal = QSerialPort::Data8;
 
     if(stopBitsString=="1")
         stopBitsGlobal = QSerialPort::OneStop;
-    else if(stopBitsString=="2")
-        stopBitsGlobal = QSerialPort::TwoStop;
     else
-        stopBitsGlobal = QSerialPort::OneStop;
-
+        stopBitsGlobal = QSerialPort::TwoStop;
+}
+void serialPort::setLoadedConfig(){
     serial->setBaudRate(baudRateGlobal);
     serial->setDataBits(dataBitsGlobal);
     serial->setParity(parityGlobal);
     serial->setStopBits(stopBitsGlobal);
     serial->setFlowControl(flowControlGlobal);
 }
-
 void serialPort::close(){
     serial->close();
 }
@@ -136,6 +139,19 @@ void serialPort::createMsg(preguntas *pregArray){
             maxPreg++;
     }
     if(maxPreg!=0){
+        int baudValue;
+        loadConfig();
+        for(cont=0;cont<7;cont++)
+        {
+            if(baud[cont] == baudsString){
+                baudValue=cont;
+            }
+        }
+        for(auxcont=0;auxcont<_repeat_message_;auxcont++)
+        {
+            tmpQByte = generateMsg(255,'S','B',baudValue);
+            msgArray << tmpQByte;
+        }
         for(auxcont=0;auxcont<_repeat_message_;auxcont++)
         {
             tmpQByte = generateMsg(255,'X','X',maxPreg);
@@ -151,28 +167,16 @@ void serialPort::createMsg(preguntas *pregArray){
                     tmpQByte = generateMsg(255,'N',cont+1,pregArray[cont].getCantResp());
                     msgArray << tmpQByte;
                     switch(pregArray[cont].getCantResp()){
+                    case 4:
+                        tmpQByte = generateMsg(255,'D',cont+1,pregArray[cont].getRespuestaD());
+                        msgArray << tmpQByte;
+                    case 3:
+                        tmpQByte = generateMsg(255,'C',cont+1,pregArray[cont].getRespuestaC());
+                        msgArray << tmpQByte;
                     case 2:
                         tmpQByte = generateMsg(255,'A',cont+1,pregArray[cont].getRespuestaA());
                         msgArray << tmpQByte;
                         tmpQByte = generateMsg(255,'B',cont+1,pregArray[cont].getRespuestaB());
-                        msgArray << tmpQByte;
-                        break;
-                    case 3:
-                        tmpQByte = generateMsg(255,'A',cont+1,pregArray[cont].getRespuestaA());
-                        msgArray << tmpQByte;
-                        tmpQByte = generateMsg(255,'B',cont+1,pregArray[cont].getRespuestaB());
-                        msgArray << tmpQByte;
-                        tmpQByte = generateMsg(255,'C',cont+1,pregArray[cont].getRespuestaC());
-                        msgArray << tmpQByte;
-                        break;
-                    case 4:
-                        tmpQByte = generateMsg(255,'A',cont+1,pregArray[cont].getRespuestaA());
-                        msgArray << tmpQByte;
-                        tmpQByte = generateMsg(255,'B',cont+1,pregArray[cont].getRespuestaB());
-                        msgArray << tmpQByte;
-                        tmpQByte = generateMsg(255,'C',cont+1,pregArray[cont].getRespuestaC());
-                        msgArray << tmpQByte;
-                        tmpQByte = generateMsg(255,'D',cont+1,pregArray[cont].getRespuestaD());
                         msgArray << tmpQByte;
                         break;
                     }
@@ -232,6 +236,10 @@ void serialPort::enviarMsgTimer(){
 
     write(msgArray[cont]);
     cont++;
+    if(cont==_repeat_message_){
+        this->close();
+        this->open(false);
+    }
     if(cont>=msgArray.size()){
         for(cont=0;cont<_players_total_;cont++)
             idRetrys[cont] = 0;

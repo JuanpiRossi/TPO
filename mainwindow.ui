@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QGroupBox" name="principalBox">
@@ -601,6 +601,39 @@
       </widget>
      </widget>
     </widget>
+    <widget class="QWidget" name="page_4">
+     <widget class="QGroupBox" name="gameInProgressBox_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>491</width>
+        <height>271</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string/>
+      </property>
+      <widget class="QLabel" name="label_4">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>40</y>
+         <width>501</width>
+         <height>171</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>40</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Enviando preguntas</string>
+       </property>
+      </widget>
+     </widget>
+    </widget>
     <widget class="QWidget" name="page_2">
      <widget class="QGroupBox" name="gameInProgressBox">
       <property name="geometry">
@@ -630,6 +663,16 @@
        </property>
        <property name="text">
         <string>Juego en progreso</string>
+       </property>
+      </widget>
+      <widget class="QLCDNumber" name="lcdNumber">
+       <property name="geometry">
+        <rect>
+         <x>120</x>
+         <y>10</y>
+         <width>241</width>
+         <height>61</height>
+        </rect>
        </property>
       </widget>
      </widget>

@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #define _players_total_ 8
-#define _repeat_message_ 6
+#define _repeat_message_ 3
 
 #include <QMainWindow>
 #include "config.h"
@@ -91,6 +91,8 @@ private slots:
     void moveSave();
 
     void changePreg(int p);
+
+    void transcursoJuego();
 signals:
     void emitData();
 private:

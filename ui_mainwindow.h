@@ -16,6 +16,7 @@
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLCDNumber>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
@@ -69,9 +70,13 @@ public:
     QLabel *msgErrorComunicacion;
     QWidget *mensajeGuardar;
     QLabel *label_3;
+    QWidget *page_4;
+    QGroupBox *gameInProgressBox_2;
+    QLabel *label_4;
     QWidget *page_2;
     QGroupBox *gameInProgressBox;
     QLabel *label;
+    QLCDNumber *lcdNumber;
     QWidget *page_3;
     QGroupBox *groupBox;
     QPushButton *closeButton_2;
@@ -248,6 +253,18 @@ public:
         label_3->setObjectName(QStringLiteral("label_3"));
         label_3->setGeometry(QRect(10, 6, 151, 31));
         gameState->addWidget(page);
+        page_4 = new QWidget();
+        page_4->setObjectName(QStringLiteral("page_4"));
+        gameInProgressBox_2 = new QGroupBox(page_4);
+        gameInProgressBox_2->setObjectName(QStringLiteral("gameInProgressBox_2"));
+        gameInProgressBox_2->setGeometry(QRect(10, 10, 491, 271));
+        label_4 = new QLabel(gameInProgressBox_2);
+        label_4->setObjectName(QStringLiteral("label_4"));
+        label_4->setGeometry(QRect(20, 40, 501, 171));
+        QFont font;
+        font.setPointSize(40);
+        label_4->setFont(font);
+        gameState->addWidget(page_4);
         page_2 = new QWidget();
         page_2->setObjectName(QStringLiteral("page_2"));
         gameInProgressBox = new QGroupBox(page_2);
@@ -256,9 +273,10 @@ public:
         label = new QLabel(gameInProgressBox);
         label->setObjectName(QStringLiteral("label"));
         label->setGeometry(QRect(20, 40, 501, 171));
-        QFont font;
-        font.setPointSize(40);
         label->setFont(font);
+        lcdNumber = new QLCDNumber(gameInProgressBox);
+        lcdNumber->setObjectName(QStringLiteral("lcdNumber"));
+        lcdNumber->setGeometry(QRect(120, 10, 241, 61));
         gameState->addWidget(page_2);
         page_3 = new QWidget();
         page_3->setObjectName(QStringLiteral("page_3"));
@@ -279,35 +297,34 @@ public:
         label_2->setFont(font1);
         puntajePrimerPuesto = new QLabel(groupBox);
         puntajePrimerPuesto->setObjectName(QStringLiteral("puntajePrimerPuesto"));
-        puntajePrimerPuesto->setGeometry(QRect(110, 20, 191, 21));
+        puntajePrimerPuesto->setGeometry(QRect(110, 20, 351, 21));
         puntajeSegundoPuesto = new QLabel(groupBox);
         puntajeSegundoPuesto->setObjectName(QStringLiteral("puntajeSegundoPuesto"));
-        puntajeSegundoPuesto->setGeometry(QRect(110, 50, 191, 21));
+        puntajeSegundoPuesto->setGeometry(QRect(110, 50, 351, 21));
         puntajeTercerPuesto = new QLabel(groupBox);
         puntajeTercerPuesto->setObjectName(QStringLiteral("puntajeTercerPuesto"));
-        puntajeTercerPuesto->setGeometry(QRect(110, 80, 191, 21));
+        puntajeTercerPuesto->setGeometry(QRect(110, 80, 351, 21));
         puntajeCuartoPuesto = new QLabel(groupBox);
         puntajeCuartoPuesto->setObjectName(QStringLiteral("puntajeCuartoPuesto"));
-        puntajeCuartoPuesto->setGeometry(QRect(110, 110, 191, 21));
+        puntajeCuartoPuesto->setGeometry(QRect(110, 110, 351, 21));
         puntajeQuintoPuesto = new QLabel(groupBox);
         puntajeQuintoPuesto->setObjectName(QStringLiteral("puntajeQuintoPuesto"));
-        puntajeQuintoPuesto->setGeometry(QRect(110, 140, 191, 21));
+        puntajeQuintoPuesto->setGeometry(QRect(110, 140, 351, 21));
         puntajeSextoPuesto = new QLabel(groupBox);
         puntajeSextoPuesto->setObjectName(QStringLiteral("puntajeSextoPuesto"));
-        puntajeSextoPuesto->setGeometry(QRect(110, 170, 191, 21));
+        puntajeSextoPuesto->setGeometry(QRect(110, 170, 351, 21));
         puntajeSeptimoPuesto = new QLabel(groupBox);
         puntajeSeptimoPuesto->setObjectName(QStringLiteral("puntajeSeptimoPuesto"));
-        puntajeSeptimoPuesto->setGeometry(QRect(110, 200, 191, 21));
+        puntajeSeptimoPuesto->setGeometry(QRect(110, 200, 351, 21));
         puntajeOctavoPuesto = new QLabel(groupBox);
         puntajeOctavoPuesto->setObjectName(QStringLiteral("puntajeOctavoPuesto"));
         puntajeOctavoPuesto->setGeometry(QRect(110, 230, 191, 21));
-
         gameState->addWidget(page_3);
         MainWindow->setCentralWidget(centralWidget);
 
         retranslateUi(MainWindow);
 
-        gameState->setCurrentIndex(0);
+        gameState->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -362,6 +379,8 @@ public:
         msgErrorGuardar->setText(QApplication::translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:11pt; font-weight:600; color:#ff0000;\">Error al guardar</span><br/>Debe escribir la pregunta,<br/>sus respuestas y seleccionar<br/>a correcta.</p></body></html>", nullptr));
         msgErrorComunicacion->setText(QApplication::translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:11pt; font-weight:600; color:#ff0000;\">Error de comunicacion</span><br/>Debe configurar el puerto<br/>antes de empezar la partida.</p></body></html>", nullptr));
         label_3->setText(QApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-size:11pt; font-weight:600;\">Pregunta guardada</span></p></body></html>", nullptr));
+        gameInProgressBox_2->setTitle(QString());
+        label_4->setText(QApplication::translate("MainWindow", "Enviando preguntas", nullptr));
         gameInProgressBox->setTitle(QString());
         label->setText(QApplication::translate("MainWindow", "Juego en progreso", nullptr));
         groupBox->setTitle(QString());
@@ -373,6 +392,9 @@ public:
         puntajeTercerPuesto->setText(QApplication::translate("MainWindow", "<p>3.- Jugador # : <strong># Puntos</strong></p>", nullptr));
         puntajeCuartoPuesto->setText(QApplication::translate("MainWindow", "<p>4.- Jugador # : <strong># Puntos</strong></p>", nullptr));
         puntajeQuintoPuesto->setText(QApplication::translate("MainWindow", "<p>5.- Jugador # : <strong># Puntos</strong></p>", nullptr));
+        puntajeSextoPuesto->setText(QApplication::translate("MainWindow", "<html><head/><body><p>6.- Jugador # : <span style=\" font-weight:600;\"># Puntos</span></p></body></html>", nullptr));
+        puntajeSeptimoPuesto->setText(QApplication::translate("MainWindow", "<html><head/><body><p>7.- Jugador # : <span style=\" font-weight:600;\"># Puntos</span></p></body></html>", nullptr));
+        puntajeOctavoPuesto->setText(QApplication::translate("MainWindow", "<html><head/><body><p>8.- Jugador # : <span style=\" font-weight:600;\"># Puntos</span></p></body></html>", nullptr));
     } // retranslateUi
 
 };

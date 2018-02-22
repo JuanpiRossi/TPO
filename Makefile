@@ -172,10 +172,6 @@ Makefile: TPO.pro ../Qt/5.10.0/mingw53_32/mkspecs/win32-g++/qmake.conf ../Qt/5.1
 		../Qt/5.10.0/mingw53_32/mkspecs/modules/qt_lib_remoteobjects_private.pri \
 		../Qt/5.10.0/mingw53_32/mkspecs/modules/qt_lib_repparser.pri \
 		../Qt/5.10.0/mingw53_32/mkspecs/modules/qt_lib_repparser_private.pri \
-		../Qt/5.10.0/mingw53_32/mkspecs/modules/qt_lib_script.pri \
-		../Qt/5.10.0/mingw53_32/mkspecs/modules/qt_lib_script_private.pri \
-		../Qt/5.10.0/mingw53_32/mkspecs/modules/qt_lib_scripttools.pri \
-		../Qt/5.10.0/mingw53_32/mkspecs/modules/qt_lib_scripttools_private.pri \
 		../Qt/5.10.0/mingw53_32/mkspecs/modules/qt_lib_scxml.pri \
 		../Qt/5.10.0/mingw53_32/mkspecs/modules/qt_lib_scxml_private.pri \
 		../Qt/5.10.0/mingw53_32/mkspecs/modules/qt_lib_sensors.pri \
@@ -353,10 +349,6 @@ Makefile: TPO.pro ../Qt/5.10.0/mingw53_32/mkspecs/win32-g++/qmake.conf ../Qt/5.1
 ../Qt/5.10.0/mingw53_32/mkspecs/modules/qt_lib_remoteobjects_private.pri:
 ../Qt/5.10.0/mingw53_32/mkspecs/modules/qt_lib_repparser.pri:
 ../Qt/5.10.0/mingw53_32/mkspecs/modules/qt_lib_repparser_private.pri:
-../Qt/5.10.0/mingw53_32/mkspecs/modules/qt_lib_script.pri:
-../Qt/5.10.0/mingw53_32/mkspecs/modules/qt_lib_script_private.pri:
-../Qt/5.10.0/mingw53_32/mkspecs/modules/qt_lib_scripttools.pri:
-../Qt/5.10.0/mingw53_32/mkspecs/modules/qt_lib_scripttools_private.pri:
 ../Qt/5.10.0/mingw53_32/mkspecs/modules/qt_lib_scxml.pri:
 ../Qt/5.10.0/mingw53_32/mkspecs/modules/qt_lib_scxml_private.pri:
 ../Qt/5.10.0/mingw53_32/mkspecs/modules/qt_lib_sensors.pri:
