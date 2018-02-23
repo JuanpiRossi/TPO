@@ -275,6 +275,8 @@ void serialPort::enviarMsgTimer(){
     if(cont==_repeat_message_){
         this->close();
         this->open(false);
+        timer->stop();
+        timer->start(timeTimer);
     }
     if(cont>=msgArray.size()){
         for(cont=0;cont<_players_total_;cont++)
