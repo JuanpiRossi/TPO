@@ -7,6 +7,7 @@
 preguntas pregArray[7];
 int currentPreg=1,maxPreg=1;
 int timeTranscursoJuego=0;
+extern int timeTimer;
 #define ERRORCOMUNICACION 2
 #define ERRORGUARDAR 1
 
@@ -164,9 +165,10 @@ bool MainWindow::validacionGuardar()
 
 void MainWindow::on_newPregButton_clicked()
 {
-    if(maxPreg<7)
+    if(maxPreg<7){
         maxPreg++;
     habilitarPreguntas();
+    }
 }
 
 void MainWindow::on_pregButton_1_clicked()
@@ -284,8 +286,10 @@ void MainWindow::empezarJuego(){
         timeTranscursoJuego=gameTimer;
         ui->gameState->setCurrentIndex(2);
         timer->start(1000);
-    }   else
+    }   else{
+        serial->close();
         ui->gameState->setCurrentIndex(0);
+    }
 }
 
 void MainWindow::transcursoJuego(){
@@ -304,7 +308,7 @@ void MainWindow::finJuego(){
     for(i=0;i<_players_total_;i++){
         serial->response[i].clear();
     }
-    timerGetResp->start(TIMERECIBIRPUNTOS);
+    timerGetResp->start(timeTimer);
 }
 
 void MainWindow::pedirPuntajes(){
@@ -317,7 +321,7 @@ void MainWindow::pedirPuntajes(){
         else
             break;
     }
-    if(id<(_players_total_*_repeat_message_)){
+    if(id<((_players_total_+1)*_repeat_message_)){
         if(id<_repeat_message_)   {
             tmp = serial->generateMsg(255,'F','F',1);
             serial->write(tmp);

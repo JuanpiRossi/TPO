@@ -1,6 +1,6 @@
-playTime:30
+playTime:20
 portName:COM4
-baudios:38400
+baudios:1200
 paridad:Par
 bitsDatos:8
 bitStop:2

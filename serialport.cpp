@@ -1,7 +1,12 @@
 #include "serialport.h"
 #include <qdebug.h>
+#define estimatedInfoTransfer 200
 
 QString baud[]={"115200","57600","38400","19200","9600","4800","2400","1200"};
+
+
+int total_bits;
+int timeTimer;
 
 serialPort::serialPort()
 {
@@ -63,6 +68,7 @@ void serialPort::setDefaultConfig(){
     serial->setParity( QSerialPort::EvenParity);
     serial->setStopBits(QSerialPort::TwoStop);
     serial->setFlowControl(flowControlGlobal);
+    timeTimer=((estimatedInfoTransfer*(8+1+3)*1000/115200))+1;
 }
 void serialPort::loadConfig(){
     QString fileContent = file.readFile();
@@ -119,6 +125,35 @@ void serialPort::setLoadedConfig(){
     serial->setParity(parityGlobal);
     serial->setStopBits(stopBitsGlobal);
     serial->setFlowControl(flowControlGlobal);
+    long BR;
+
+    if(baudRateGlobal==QSerialPort::Baud1200)
+        BR=1200;
+    else if(baudRateGlobal==QSerialPort::Baud2400)
+        BR = 2400;
+    else if(baudRateGlobal==QSerialPort::Baud4800)
+        BR = 4800;
+    else if(baudRateGlobal==QSerialPort::Baud9600)
+        BR = 9600;
+    else if(baudRateGlobal==QSerialPort::Baud19200)
+        BR = 19200;
+    else if(baudRateGlobal==QSerialPort::Baud38400)
+        BR = 38400;
+    else if(baudRateGlobal==QSerialPort::Baud57600)
+        BR = 57600;
+    else
+        BR = 115200;
+    total_bits=0;
+    if(parityGlobal!=QSerialPort::NoParity)
+        total_bits+=1;
+     total_bits+=7;
+    if(dataBitsGlobal==QSerialPort::Data8)
+        total_bits+=1;
+
+    total_bits+=2;
+    if(stopBitsGlobal==QSerialPort::TwoStop)
+        total_bits+=1;
+    timeTimer=(((estimatedInfoTransfer*total_bits*1000/BR)))+1;
 }
 void serialPort::close(){
     serial->close();
@@ -141,7 +176,7 @@ void serialPort::createMsg(preguntas *pregArray){
     if(maxPreg!=0){
         int baudValue;
         loadConfig();
-        for(cont=0;cont<7;cont++)
+        for(cont=0;cont<8;cont++)
         {
             if(baud[cont] == baudsString){
                 baudValue=cont;
@@ -149,7 +184,7 @@ void serialPort::createMsg(preguntas *pregArray){
         }
         for(auxcont=0;auxcont<_repeat_message_;auxcont++)
         {
-            tmpQByte = generateMsg(255,'S','B',baudValue);
+            tmpQByte = generateMsg(255,'S','B',baudValue+1);
             msgArray << tmpQByte;
         }
         for(auxcont=0;auxcont<_repeat_message_;auxcont++)
@@ -205,7 +240,8 @@ QByteArray serialPort::generateMsg(int id, char accion1, char accion2, QByteArra
         tmp[5+cont] = msg[cont];
         XoR = XoR ^ msg[cont];
     }
-
+    if(XoR==0)
+        XoR++;
     tmp[5+cont] = XoR;
 
     return tmp;
@@ -228,13 +264,13 @@ QByteArray serialPort::generateMsg(int id, char accion1, char accion2, int msg){
 }
 
 void serialPort::enviarMsg(){
-    timer->start(TIMERENVIODATOS);
+    timer->start(timeTimer);
 }
 
 void serialPort::enviarMsgTimer(){
     static int cont=0;
 
-    write(msgArray[cont]);
+  write(msgArray[cont]);
     cont++;
     if(cont==_repeat_message_){
         this->close();
@@ -250,7 +286,7 @@ void serialPort::enviarMsgTimer(){
 }
 
 void serialPort::envioConfirmacion(){
-    timerConfirmacion->start(TIMERESPERARESPUESTA);
+    timerConfirmacion->start(timeTimer);
 }
 
 void serialPort::envioConfirmacionTimer(){
@@ -266,7 +302,7 @@ void serialPort::envioConfirmacionTimer(){
         if(id<_players_total_)
         {
             if(c<_repeat_message_){
-                tmp = generateMsg(id,'G',id,63);
+                tmp = generateMsg(id+1,'G',1,63);
                 write(tmp);
                 c++;
                 if(c>=_repeat_message_){
@@ -311,34 +347,37 @@ void serialPort::readData(){
     QByteArray read = serial->readAll();
     qDebug() << "Recibido: " << read.toHex();
     if(read[0]=='<'&&read[1]==char(1)&&read[3]=='R'&&read[4]=='O'&&read[5]==read[6]&&read[7]=='>'){
-        if(read[2]>=char(0)&&read[2]<=char(7)){
-
-            idRetrys[read[2]] = -1;
+        if(read[2]>=char(1)&&read[2]<=char(8)){
+            idRetrys[read[2]-1] = -1;
         }
     }
     if(read[0]=='<'&&read[3]=='R'&&read[4]=='M'){
-        if(read[2]>=char(1)&&read[2]<=char(5)){
+        if(read[2]>=char(1)&&read[2]<=char(8)){
             if(read[6+read[1]]=='>'){
                 idRetryInfo[read[2]-1].resize(read[1]);
                 for(cont=0;cont!=read[1];cont++)
                     idRetryInfo[read[2]-1][cont] = read[cont+5];
                 for(cont=0,XoR=0;cont!=read[1];cont++)
                     XoR = XoR^read[cont+5];
+                if(XoR==0)
+                    XoR=1;
                 if(!(XoR==read[5+read[1]]))
-                    idRetryInfo[read[2]].clear();
+                    idRetryInfo[read[2]-1].clear();
             }
         }
     }
     if(read[0]=='<'&&read[3]=='R'&&read[4]=='F'&&read[5]=='P'&&read[6]==char(1)&&
             read[8]=='P'&&read[9]==char(2)&&read[11]=='P'&&read[12]==char(3)&&read[14]=='P'&&read[15]==char(4)&&
             read[17]=='P'&&read[18]==char(5)&&read[20]=='P'&&read[21]==char(6)&&read[23]=='P'&&read[24]==char(7)){
-        if(read[2]>=char(1)&&read[2]<=char(7)){
+        if(read[2]>=char(1)&&read[2]<=char(8)){
             if(read[6+read[1]]=='>'){
                 response[read[2]-1].resize(read[1]);
                 for(cont=0;cont!=read[1];cont++)
                     response[read[2]-1][cont] = read[cont+5];
                 for(cont=0,XoR=0;cont!=read[1];cont++)
                     XoR ^= read[cont+5];
+                if(XoR==0)
+                    XoR=1;
                 if(!(XoR==read[5+read[1]]))
                     response[read[2]-1].clear();
             }
@@ -372,7 +411,7 @@ void serialPort::createMsgReenvio(){
             createRetryListFull();
         }
     }
-    timerReenvio->start(TIMERENVIODATOS);
+    timerReenvio->start(timeTimer);
 }
 
 void serialPort::envioReenvioTimer(){
