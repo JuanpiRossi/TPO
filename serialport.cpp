@@ -146,7 +146,7 @@ void serialPort::setLoadedConfig(){
     total_bits=0;
     if(parityGlobal!=QSerialPort::NoParity)
         total_bits+=1;
-     total_bits+=7;
+    total_bits+=7;
     if(dataBitsGlobal==QSerialPort::Data8)
         total_bits+=1;
 
@@ -270,7 +270,7 @@ void serialPort::enviarMsg(){
 void serialPort::enviarMsgTimer(){
     static int cont=0;
 
-  write(msgArray[cont]);
+    write(msgArray[cont]);
     cont++;
     if(cont==_repeat_message_){
         this->close();
@@ -286,6 +286,7 @@ void serialPort::enviarMsgTimer(){
         envioConfirmacion();
     }
 }
+
 
 void serialPort::envioConfirmacion(){
     timerConfirmacion->start(timeTimer);
@@ -346,42 +347,71 @@ void serialPort::envioConfirmacionTimer(){
 
 void serialPort::readData(){
     int cont,XoR;
+    static QByteArray info=serial->readAll();
     QByteArray read = serial->readAll();
+    info=info+read;
     qDebug() << "Recibido: " << read.toHex();
-    if(read[0]=='<'&&read[1]==char(1)&&read[3]=='R'&&read[4]=='O'&&read[5]==read[6]&&read[7]=='>'){
-        if(read[2]>=char(1)&&read[2]<=char(8)){
-            idRetrys[read[2]-1] = -1;
+    qDebug() << "Recibido2: " << info.toHex();
+    for(cont=0;cont<info.size();cont++){
+        QByteArray msg;
+        int cont2;
+        for(cont2=0;cont<info.size();cont2++){
+            if(info[cont2]=='<')
+                break;
         }
-    }
-    if(read[0]=='<'&&read[3]=='R'&&read[4]=='M'){
-        if(read[2]>=char(1)&&read[2]<=char(8)){
-            if(read[6+read[1]]=='>'){
-                idRetryInfo[read[2]-1].resize(read[1]);
-                for(cont=0;cont!=read[1];cont++)
-                    idRetryInfo[read[2]-1][cont] = read[cont+5];
-                for(cont=0,XoR=0;cont!=read[1];cont++)
-                    XoR = XoR^read[cont+5];
-                if(XoR==0)
-                    XoR=1;
-                if(!(XoR==read[5+read[1]]))
-                    idRetryInfo[read[2]-1].clear();
+        if(info[cont2]!='<'){
+            info.clear();
+            cont=0;
+            return;
+        }
+        info=info.right(info.size()-cont2);
+        for(cont2=0;cont2<info.size();cont2++){
+            if(info[cont2]=='>')
+                break;
+        }
+        msg=info.left(cont2+1);
+        qDebug() << "RecibidoParsed: " << msg.toHex();
+        info=info.right(info.size()-cont2-1);
+        cont=0;
+        qDebug() << "NewInfo: " << info.toHex();
+
+        if(msg.size()>=8){
+            if(msg[0]=='<'&&msg[1]==char(1)&&msg[3]=='R'&&msg[4]=='O'&&msg[5]==msg[6]&&msg[7]=='>'){
+                if(msg[2]>=char(1)&&msg[2]<=char(8)){
+                    idRetrys[msg[2]-1] = -1;
+                }
             }
-        }
-    }
-    if(read[0]=='<'&&read[3]=='R'&&read[4]=='F'&&read[5]=='P'&&read[6]==char(1)&&
-            read[8]=='P'&&read[9]==char(2)&&read[11]=='P'&&read[12]==char(3)&&read[14]=='P'&&read[15]==char(4)&&
-            read[17]=='P'&&read[18]==char(5)&&read[20]=='P'&&read[21]==char(6)&&read[23]=='P'&&read[24]==char(7)){
-        if(read[2]>=char(1)&&read[2]<=char(8)){
-            if(read[6+read[1]]=='>'){
-                response[read[2]-1].resize(read[1]);
-                for(cont=0;cont!=read[1];cont++)
-                    response[read[2]-1][cont] = read[cont+5];
-                for(cont=0,XoR=0;cont!=read[1];cont++)
-                    XoR ^= read[cont+5];
-                if(XoR==0)
-                    XoR=1;
-                if(!(XoR==read[5+read[1]]))
-                    response[read[2]-1].clear();
+            if(msg[0]=='<'&&msg[3]=='R'&&msg[4]=='M'){
+                if(msg[2]>=char(1)&&msg[2]<=char(8)){
+                    if(msg[6+msg[1]]=='>'){
+                        idRetryInfo[msg[2]-1].resize(msg[1]);
+                        for(cont=0;cont!=msg[1];cont++)
+                            idRetryInfo[msg[2]-1][cont] = msg[cont+5];
+                        for(cont=0,XoR=0;cont!=msg[1];cont++)
+                            XoR = XoR^msg[cont+5];
+                        if(XoR==0)
+                            XoR=1;
+                        if(!(XoR==msg[5+msg[1]]))
+                            idRetryInfo[msg[2]-1].clear();
+                    }
+                }
+            }
+            if(msg[0]=='<'&&msg[3]=='R'&&msg[4]=='F'&&msg[5]=='P'&&msg[6]==char(1)&&
+                    msg[8]=='P'&&msg[9]==char(2)&&msg[11]=='P'&&msg[12]==char(3)&&msg[14]=='P'&&msg[15]==char(4)&&
+                    msg[17]=='P'&&msg[18]==char(5)&&msg[20]=='P'&&msg[21]==char(6)&&msg[23]=='P'&&msg[24]==char(7)){
+                if(msg[2]>=char(1)&&msg[2]<=char(8)){
+                    if(msg[6+msg[1]]=='>'){
+                        response[msg[2]-1].resize(msg[1]);
+                        for(cont=0;cont<msg[1];cont++)
+                            response[msg[2]-1][cont] = msg[cont+5];
+                        for(cont=0,XoR=0;cont<msg[1];cont++)
+                            XoR ^= msg[cont+5];
+                        if(XoR==0)
+                            XoR=1;
+                        if(!(XoR==msg[5+msg[1]]))
+                            response[msg[2]-1].clear();
+                    }
+                }
             }
         }
     }
@@ -554,19 +584,4 @@ void serialPort::createRetryListFull(){
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
