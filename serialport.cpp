@@ -289,7 +289,11 @@ void serialPort::enviarMsgTimer(){
 
 
 void serialPort::envioConfirmacion(){
+    int i;
+    for(i=0;i<_players_total_;i++)
+        idRetryInfo[i].clear();
     timerConfirmacion->start(timeTimer);
+
 }
 
 void serialPort::envioConfirmacionTimer(){

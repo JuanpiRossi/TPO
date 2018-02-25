@@ -244,7 +244,13 @@ void MainWindow::on_removeButton_clicked(){
 
 void MainWindow::on_startButton_clicked()
 {
-    if(pregArray[0].getCantResp()!=0){
+    int i;
+    int incompletePregsFlag=0;
+    for(i=0;i<maxPreg;i++){
+        if(pregArray[i].getCantResp()==0)
+            incompletePregsFlag=1;
+    }
+    if(incompletePregsFlag==0){
         serial->createMsg(pregArray);
         serial->open(true);
         if(serial->isOpen()){
