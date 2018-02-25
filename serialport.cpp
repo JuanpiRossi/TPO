@@ -350,7 +350,6 @@ void serialPort::readData(){
     static QByteArray info=serial->readAll();
     QByteArray read = serial->readAll();
     info=info+read;
-    qDebug() << "Recibido: " << read.toHex();
     qDebug() << "Recibido2: " << info.toHex();
     for(cont=0;cont<info.size();cont++){
         QByteArray msg;
